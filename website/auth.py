@@ -46,7 +46,7 @@ def sign_up():
         user = User.query.filter_by(email=email).first()
 
         #controlli
-        if user:
+        if user is not None:
             flash('Email already exists. So the user already exists.', category='error')
         elif len(email) < 4:
             flash("Email must be greater than 4 characters.", category='error')
