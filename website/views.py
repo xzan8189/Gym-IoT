@@ -35,3 +35,7 @@ def delete_note():
             db.session.commit()
 
     return jsonify({})
+
+@views.route('/prova')
+def prova():
+    return render_template("charts.html")
