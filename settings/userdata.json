@@ -1,0 +1,18 @@
+{
+  "Users": [
+    {
+      "username": "xzan8189",
+      "name": "Vincenzo",
+      "surname": "Marrazzo",
+      "password": "ciaocome",
+      "registration_date": "06-05-2022"
+    },
+    {
+      "username": "dakooo",
+      "name": "Davide",
+      "surname": "Iovino",
+      "password": "ciaocome",
+      "registration_date": "06-05-2022"
+    }
+  ]
+}
