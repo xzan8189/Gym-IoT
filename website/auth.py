@@ -18,6 +18,10 @@ table = dynamodb.Table('Users')
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    if ('user_in_session' in  session):
+        flash('You are already logged in!', category='success')
+        return redirect(url_for('views.home'))
+
     if (request.method == 'POST'):
         username = request.form.get('username')
         password = request.form.get('password')
@@ -60,16 +64,19 @@ def sign_up():
 
 
         #controlli
-        # if user is not None:
-        #     flash('Email already exists. So the user already exists.', category='error')
+        try:
+            response = table.get_item(Key={'username': username})
+            print(response)
+        except ClientError as e:
+            print(e.response['Error']['Message'])
+
         if len(username) < 4:
-            username = ""
             flash("Email must be greater than 4 characters.", category='error')
+        elif 'Item' in response:
+            flash('Email already exists. So the user already exists.', category='error')
         elif len(name) < 2:
-            name = ""
             flash("First name must be greater than 2 characters.", category='error')
         elif len(surname) < 2:
-            surname=""
             flash("Surname must be greater than 2 characters.", category='error')
         elif password1 != password2:
             flash("Passwords don\'t match.", category='error')
@@ -82,6 +89,8 @@ def sign_up():
             new_user_dict = Utils.objectUser_to_dict(new_user)
             table.put_item(Item=new_user_dict)
 
+            session.clear()
+            session['user_in_session'] = new_user_dict
             flash("Account created!", category='success')
             return redirect(url_for('views.home'))
 

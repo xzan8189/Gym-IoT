@@ -9,7 +9,7 @@ dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:4566")
 table = dynamodb.Table('Users')
 
 # Metodi della classe
-def load_movies(users):
+def load_users(users):
     for customer in users['Users']:
         user = User(customer['username'], customer['name'], customer['surname'], customer['password'], customer['registration_date'])
         #print(f"Adding user: \n{user}")
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     with open("userdata.json") as json_file:
         user_list = json.load(json_file, parse_float=Decimal)
 
-    load_movies(user_list)
+    load_users(user_list)
     username = input("Scrivi l'username dell'utente da trovate nel DB: ")
 
     try:
