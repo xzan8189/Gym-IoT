@@ -1,67 +1,88 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from datetime import datetime
 
-from . import db
-from .models import User
+import boto3
+from botocore.exceptions import ClientError
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from flask_login import login_user, current_user
+
+from models.User import User
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, login_required, logout_user, current_user
+
+from models.Utils import Utils
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/')
+# Variabili d'istanza
+dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:4566")
+table = dynamodb.Table('Users')
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if (request.method == 'POST'):
-        email = request.form.get('email')
+        username = request.form.get('username')
         password = request.form.get('password')
+        print(f'Username: {username}, Password: {password}')
 
-        user = User.query.filter_by(email=email).first()
-        if user:
-            if check_password_hash(user.password, password):
-                flash('Logged in successfully!', category='success')
-                login_user(user, remember=True)
-                return redirect(url_for('views.home'))
+        try:
+            user_found_dict = table.get_item(Key={'username': username})
+            if len(user_found_dict)>1:
+                if check_password_hash(user_found_dict['Item']['password'], password):
+                    flash('Logged in successfully!', category='success')
+                    user_found_obj = Utils.dictUser_to_object(user_found_dict)
+                    session['user_in_session'] = user_found_dict['Item']
+                    return redirect(url_for('views.home'))
+                else:
+                    flash('Incorrect password, try again.', category='error')
             else:
-                flash('Incorrect password, try again.', category='error')
-        else:
-            flash('Email does not exist.', category='error')
+                flash('Email does not exist.', category='error')
+        except ClientError as e:
+            print(e.response['Error']['Message'])
 
+
+    print("ciao")
     data = request.form
     print(data)
     return render_template("login.html", user=current_user)
 
 @auth.route('/logout')
-@login_required
 def logout():
-    logout_user()
+    session.clear()
     return redirect(url_for('auth.login'))
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
-        email = request.form.get('email')
-        first_name = request.form.get('firstName')
+        username = request.form.get('username')
+        name = request.form.get('name')
+        surname = request.form.get('surname')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
-        user = User.query.filter_by(email=email).first()
 
         #controlli
-        if user is not None:
-            flash('Email already exists. So the user already exists.', category='error')
-        elif len(email) < 4:
+        # if user is not None:
+        #     flash('Email already exists. So the user already exists.', category='error')
+        if len(username) < 4:
+            username = ""
             flash("Email must be greater than 4 characters.", category='error')
-        elif len(first_name) < 2:
+        elif len(name) < 2:
+            name = ""
             flash("First name must be greater than 2 characters.", category='error')
+        elif len(surname) < 2:
+            surname=""
+            flash("Surname must be greater than 2 characters.", category='error')
         elif password1 != password2:
             flash("Passwords don\'t match.", category='error')
         elif len(password1) < 7:
             flash("Password must be at least 7 characters.", category='error')
         else:
-            new_user = User(email=email, first_name=first_name, password=generate_password_hash(password1, method='sha256'))
-            db.session.add(new_user)
-            db.session.commit()
-            login_user(user, remember=True)
+            #password = generate_password_hash(password1, method='sha256')
+            new_user = User(username=username, name=name, surname=surname, password=generate_password_hash(password1, method='sha256'), registration_date=str(datetime.date(datetime.now())))
+            print(new_user)
+            new_user_dict = Utils.objectUser_to_dict(new_user)
+            table.put_item(Item=new_user_dict)
+
             flash("Account created!", category='success')
             return redirect(url_for('views.home'))
 
-    return render_template("sign_up.html", user=current_user)
+    return render_template("sign_up.html")
