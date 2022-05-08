@@ -34,7 +34,8 @@ def login():
                     flash('Logged in successfully!', category='success')
                     user_found_obj = Utils.dictUser_to_object(user_found_dict)
                     session['user_in_session'] = user_found_dict['Item']
-                    return redirect(url_for('views.home'))
+                    #return render_template("home.html", user=user_found_dict['Item'])
+                    return redirect(url_for('views.home', user=user_found_dict['Item']))
                 else:
                     flash('Incorrect password, try again.', category='error')
             else:
@@ -46,7 +47,7 @@ def login():
     print("ciao")
     data = request.form
     print(data)
-    return render_template("login.html", user=current_user)
+    return render_template("login.html")
 
 @auth.route('/logout')
 def logout():

@@ -29,3 +29,6 @@ if __name__ == '__main__':
 
     user_found = User(response['Item']['username'], response['Item']['name'], response['Item']['surname'], response['Item']['password'], response['Item']['registration_date'])
     print(f"L'utente è stato trovato: \n{user_found}")
+
+    print("Calories: " + str(response['Item']["gym"]["calories"]))
+    print("Machines: " + str(response['Item']["gym"]["machines"]))

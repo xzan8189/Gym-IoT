@@ -4,8 +4,15 @@
       "username": "xzan8189",
       "name": "Vincenzo",
       "surname": "Marrazzo",
-      "password": "ciaocome",
-      "registration_date": "06-05-2022"
+      "password": "sha256$2iYsmyMuTrBHhYQ5$7bf0a0192abd6028c0deec9d71663583d31a60dfba28d3b0e5f2de332fe669e3",
+      "registration_date": "06-05-2022",
+      "gym": {
+        "calories": ["0", "10000", "5000", "15000", "10000", "20000", "15000", "25000", "20000", "30000", "25000", "40000"],
+        "machines": {
+          "name_machine": ["Cyclette", "Tapis roulant", "Elliptical bike"],
+          "time_spent": ["12", "30", "60"]
+        }
+      }
     },
     {
       "username": "dakooo",
