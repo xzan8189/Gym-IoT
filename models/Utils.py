@@ -26,3 +26,23 @@ class Utils:
         }
 
         return new_customer
+
+    @staticmethod
+    def create_objectUser_to_dict(obj_user: User) -> dict:
+        new_customer = {
+            'username': obj_user.getUsername(),
+            'name': obj_user.getName(),
+            'surname': obj_user.getSurname(),
+            'password': obj_user.getPassword(),
+            'registration_date': obj_user.getRegistration_date(),
+            'gym': {
+                "calories": ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+                "machines": {
+                    "name_machine": ["Cyclette", "Tapis roulant", "Elliptical bike", "Spin bike"],
+                    "time_spent": ["0", "0", "0", "0"],
+                    "calories_spent": ["0", "0", "0", "0"]
+                }
+            }
+        }
+
+        return new_customer

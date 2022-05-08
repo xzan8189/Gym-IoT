@@ -87,7 +87,7 @@ def sign_up():
             #password = generate_password_hash(password1, method='sha256')
             new_user = User(username=username, name=name, surname=surname, password=generate_password_hash(password1, method='sha256'), registration_date=str(datetime.date(datetime.now())))
             print(new_user)
-            new_user_dict = Utils.objectUser_to_dict(new_user)
+            new_user_dict = Utils.create_objectUser_to_dict(new_user)
             table.put_item(Item=new_user_dict)
 
             session.clear()

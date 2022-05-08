@@ -30,7 +30,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 
 function myAreaChart(gym) {
     // Area Chart Example
-    console.log(gym['calories']);
+    console.log('calories: ' + gym['calories']);
     var ctx = document.getElementById("myAreaChart");
 
     var myLineChart = new Chart(ctx, {
@@ -100,7 +100,7 @@ function myAreaChart(gym) {
               padding: 10,
               // Testo sull'asse delle y
               callback: function(value, index, values) {
-                return '$' + number_format(value);
+                return number_format(value);
               }
             },
             gridLines: {
@@ -132,9 +132,9 @@ function myAreaChart(gym) {
           callbacks: {
             label: function(tooltipItem, chart) { //Testo dentro il tooltip a comparsa
               var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-              var start_string = datasetLabel + ': $'
+              var start_string = datasetLabel + ': '
               if (parseInt(tooltipItem.yLabel) == 0) {
-                return start_string + number_format(tooltipItem.yLabel) + ', no work this month';
+                return start_string + number_format(tooltipItem.yLabel) + '. No work this month';
               } else {
                 return start_string + number_format(tooltipItem.yLabel);
               }
