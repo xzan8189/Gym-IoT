@@ -39,14 +39,14 @@ function myBarChart(gym) {
       data: { // 1 data
         labels: gym['name_machine'],
         datasets: [{
-          label: "Time spent: ",
+          label: "Time spent",
           backgroundColor: "#4e73df",
           hoverBackgroundColor: "#2e59d9",
           borderColor: "#4e73df",
           data: gym['time_spent'],
         },
         {
-          label: "Calories spent: ",
+          label: "Calories spent",
           data: gym['calories_spent'],
         }],
       },
@@ -112,7 +112,11 @@ function myBarChart(gym) {
           callbacks: {
             label: function(tooltipItem, chart) {
               var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-              return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + "min";
+              if (datasetLabel == 'Time spent') {
+                return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + "min";
+              } else {
+                return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + "Kcal";
+              }
             }
           }
         },
