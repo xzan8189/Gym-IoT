@@ -9,7 +9,10 @@
     <meta name="description" content="">
     <meta name="author" content="Vincenzo Marrazzo">
 
-    <title>Prova</title>
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="{{ url_for('static', filename='img/logo_website.png') }}">
+
+    <title>GYMIOT - Dashboard</title>
 
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" href="{{ url_for('static', filename='scripts/vendor/fontawesome-free/css/all.min.css') }}">
@@ -217,11 +220,9 @@
                 {% endfor %}
                 {% endif %}
                 {% endwith %}
-                <h1 class="h3 mb-2 text-gray-800">Charts</h1>
-                <p class="mb-4">Chart.js is a third party plugin that is used to generate the charts in this theme.
-                    The charts below have been customized - for further customization options, please visit the <a
-                            target="_blank" href="https://www.chartjs.org/docs/latest/">official Chart.js
-                        documentation</a>.</p>
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                </div>
 
                 <!-- Content Row -->
                 <div class="row">
@@ -320,7 +321,8 @@
                         <!-- Area Chart -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Calories consumed per Month - Area Chart</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Calories consumed per Month - Area
+                                    Chart</h6>
                             </div>
                             <div class="card-body">
                                 <div class="chart-area">

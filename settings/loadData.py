@@ -11,7 +11,6 @@ table = dynamodb.Table('Users')
 # Metodi della classe
 def load_users(users):
     for customer in users['Users']:
-        user = User(customer['username'], customer['name'], customer['surname'], customer['password'], customer['registration_date'])
         #print(f"Adding user: \n{user}")
         table.put_item(Item=customer)
 
@@ -27,8 +26,22 @@ if __name__ == '__main__':
     except ClientError as e:
         print(e.response['Error']['Message'])
 
-    user_found = User(response['Item']['username'], response['Item']['name'], response['Item']['surname'], response['Item']['password'], response['Item']['registration_date'])
-    print(f"L'utente è stato trovato: \n{user_found}")
+    user_found = User(
+            username=response['Item']['username'],
+            name=response['Item']['name'],
+            surname=response['Item']['surname'],
+            password=response['Item']['password'],
+            registration_date=response['Item']['registration_date'],
+            sex=response['Item']['info']['sex'],
+            age=response['Item']['info']['age'],
+            weight=response['Item']['info']['weight'],
+            height=response['Item']['info']['height'],
+            calories_to_reach_today=response['Item']['gym']['data']['calories_to_reach_today']
+        )
+    print(f"L'utente è stato trovato: ")
+    #print(str(response['Item']))
 
+    print("Info: " + str(response['Item']["info"]))
     print("Calories: " + str(response['Item']["gym"]["calories"]))
     print("Machines: " + str(response['Item']["gym"]["machines"]))
+    print("Data: " + str(response['Item']["gym"]["data"]))

@@ -9,7 +9,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Register</title>
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="{{ url_for('static', filename='img/logo_website.png') }}">
+
+    <title>GYMIOT - Sign-up</title>
 
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" href="{{ url_for('static', filename='scripts/vendor/fontawesome-free/css/all.min.css') }}">
@@ -64,24 +67,61 @@
                         {% endwith %}
                         <form class="user" method="POST">
 
-                            <!-- Username e name -->
-                            <div class="form-group row">
+                            <!-- Username e Sex -->
+                            <div class="form-group row ">
                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                     <input type="text" class="form-control form-control-user" id="username"
                                            name="username"
-                                           placeholder="Enter username"/>
+                                           placeholder="Enter username" value="prova"/>
                                 </div>
 
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control form-control-user" id="name"
-                                           name="name" placeholder="Enter name"/>
+                                           name="name" placeholder="Enter name" value="prova"/>
                                 </div>
                             </div>
 
-                            <!-- Surname -->
+                            <!-- Name e Surname -->
                             <div class="form-group">
                                 <input type="text" class="form-control form-control-user" id="surname"
-                                       name="surname" placeholder="Enter surname"/>
+                                       name="surname" placeholder="Enter surname" value="prova"/>
+                            </div>
+
+                            <!-- Age, Weight, Height e Sex -->
+                            <div class="form-group row">
+                                <div class="col-sm-2 mb-3 mb-sm-0">
+                                    <input type="number" class="form-control form-control-user" id="age"
+                                           name="age" placeholder="Age" value="18"/>
+                                </div>
+
+                                <div class="col-sm-3 mb-3 mb-sm-0">
+                                    <input type="number" class="form-control form-control-user" id="weight"
+                                           name="weight" placeholder="Weight" value="50.0" min="40"/>
+                                </div>
+
+                                <div class="col-sm-3 mb-3 mb-sm-0">
+                                    <input type="number" class="form-control form-control-user" id="height"
+                                           name="height" placeholder="Height" value="1.80"/>
+                                </div>
+
+                                <div class="col-sm-3 mb-3 mb-sm-0 form-check">
+                                    <div class="form-check ">
+                                        <input class=" form-control-user" type="radio" name="sexRadio"
+                                               id="sex1" value="M">
+                                        <label class="form-check-label" for="sex1">
+                                            Male
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check align-self-center">
+                                        <input class="form-control-user selected" type="radio" name="sexRadio"
+                                               id="sex2" value="F">
+                                        <label class="form-check-label" for="sex2">
+                                            Female
+                                        </label>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <!-- Password1 e Password2 -->
