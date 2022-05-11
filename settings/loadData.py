@@ -1,3 +1,4 @@
+import datetime
 from decimal import Decimal
 import json
 import boto3
@@ -38,10 +39,13 @@ if __name__ == '__main__':
             height=response['Item']['info']['height'],
             calories_to_reach_today=response['Item']['gym']['data']['calories_to_reach_today']
         )
-    print(f"L'utente è stato trovato: ")
+    #print(f"L'utente è stato trovato: ")
     #print(str(response['Item']))
 
-    print("Info: " + str(response['Item']["info"]))
-    print("Calories: " + str(response['Item']["gym"]["calories"]))
-    print("Machines: " + str(response['Item']["gym"]["machines"]))
-    print("Data: " + str(response['Item']["gym"]["data"]))
+    # print("Info: " + str(response['Item']["info"]))
+    # print("Calories: " + str(response['Item']["gym"]["calories"]))
+    # print("Machines: " + str(response['Item']["gym"]["machines"]))
+    # print("Data: " + str(response['Item']["gym"]["data"]))
+
+    for item in response['Item']['gym']['calories'].items():
+        print(item[0] + ": " + str(item[1]))

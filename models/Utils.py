@@ -1,4 +1,5 @@
 from models.User import User
+import datetime
 
 class Utils:
 
@@ -11,6 +12,17 @@ class Utils:
             return (10 * weight) + (6.25 * height) - (5 * age) - 161
         elif (sex == 'M'):
             return (10 * weight) + (6.25 * height) - (5 * age) + 5
+
+    @staticmethod
+    def calculate_monthly_target_percentage(user: dict) -> int:
+        workouts_per_week = 3
+        number_of_weeks = 4  # sarebbero le settimane del mese, ma negli sviluppi futuri si potrebbe modificare questo parametro a piacimento
+
+        calories_lost = float(user['gym']['data']['calories_lost'])
+        calories_to_reach_monthly = float(user['gym']['data']['calories_to_reach_today']) * (
+                    workouts_per_week * number_of_weeks)
+
+        return int(calories_lost * 100 / calories_to_reach_monthly)
 
     @staticmethod
     def dictUser_to_object(dict_user: dict) -> User:
@@ -56,15 +68,18 @@ class Utils:
                 "height": f'{obj_user.getHeight()}'
             },
             'gym': {
-                "calories": ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+                "calories": {
+                    str(datetime.datetime.now().year): ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+                },
                 "machines": {
                     "name_machine": ["Cyclette", "Tapis roulant", "Elliptical bike", "Spin bike"],
                     "time_spent": ["0", "0", "0", "0"],
                     "calories_spent": ["0", "0", "0", "0"]
                 },
                 "data": {
-                  "calories_lost_today": "0",
-                  "calories_to_reach_today": f'{obj_user.getCalories_to_reach_today()}'
+                    "calories_lost": "0",
+                    "calories_lost_today": "0",
+                    "calories_to_reach_today": f'{obj_user.getCalories_to_reach_today()}'
                 }
             }
         }

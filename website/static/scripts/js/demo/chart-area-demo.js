@@ -30,15 +30,12 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 
 function myAreaChart(gym) {
     // Area Chart Example
-    console.log('calories: ' + gym['calories']);
-    var ctx = document.getElementById("myAreaChart");
-
-    var myLineChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [{
-          label: "Calories",
+    //console.log('calories: ' + gym['calories']);
+    console.log(Object.keys(gym['calories']));
+    if (Object.keys(gym['calories']).length > 1) {
+        console.log('ciao');
+        var database = [{
+          label: Object.keys(gym['calories'])[1],
           lineTension: 0.3,
           backgroundColor: "rgba(78, 115, 223, 0.05)",
           borderColor: "rgba(78, 115, 223, 1)",
@@ -50,13 +47,39 @@ function myAreaChart(gym) {
           pointHoverBorderColor: "rgba(78, 115, 223, 1)",
           pointHitRadius: 10,
           pointBorderWidth: 2,
-          data: gym['calories'],
+          data: gym['calories'][Object.keys(gym['calories'])[1]],
         },
         { // puoi anche non fare doppia linea
-          label: "wewe",
+          label: Object.keys(gym['calories'])[0],
           fill: false,
-          data: [0, 2, 7000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
-        }],
+          data: gym['calories'][Object.keys(gym['calories'])[0]],
+        }]
+    }
+    else {
+        var database = [{
+          label: Object.keys(gym['calories'])[0],
+          lineTension: 0.3,
+          backgroundColor: "rgba(78, 115, 223, 0.05)",
+          borderColor: "rgba(78, 115, 223, 1)",
+          pointRadius: 3,
+          pointBackgroundColor: "rgba(78, 115, 223, 1)",
+          pointBorderColor: "rgba(78, 115, 223, 1)",
+          pointHoverRadius: 3,
+          pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+          pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+          pointHitRadius: 10,
+          pointBorderWidth: 2,
+          data: gym['calories'][Object.keys(gym['calories'])[0]],
+        }]
+    }
+    var ctx = document.getElementById("myAreaChart");
+
+
+    var myLineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        datasets: database,
       },
       options: {
         /*title: {

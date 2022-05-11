@@ -29,9 +29,9 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 
 function myBarChart(gym) {
     // Bar Chart Example
-    console.log('name_machine: ' + gym['name_machine']);
+    /*console.log('name_machine: ' + gym['name_machine']);
     console.log('time_spent: ' + gym['time_spent']);
-    console.log('calories_spent: ' + gym['calories_spent']);
+    console.log('calories_spent: ' + gym['calories_spent']);*/
     var ctx = document.getElementById("myBarChart");
 
     var myBarChart = new Chart(ctx, {

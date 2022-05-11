@@ -27,16 +27,16 @@ def home():
             if len(user_found_dict) > 1:
                 user_found_obj = Utils.dictUser_to_object(user_found_dict)
                 session['user_in_session'] = user_found_dict['Item']
-                return render_template("home.html", user=user_found_dict['Item'])
+                return render_template("home.html", user=user_found_dict['Item'], monthly_target_percentage=Utils.calculate_monthly_target_percentage(user_found_dict['Item']))
             else:
-                flash('Email does not exist.', category='error')
+                flash('Username does not exist.', category='error')
                 return render_template("login.html")
 
         except ClientError as e:
             print(e.response['Error']['Message'])
 
 
-    return render_template("home.html")
+    return render_template("home.html") #non verrà mai raggiunto, poiché tu accedi a questa pagina solo se sei loggato
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():

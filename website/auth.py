@@ -33,8 +33,6 @@ def login():
             if len(user_found_dict)>1:
                 if check_password_hash(user_found_dict['Item']['password'], password):
                     flash('Logged in successfully!', category='success')
-                    user_found_obj = Utils.dictUser_to_object(user_found_dict)
-                    print(user_found_obj)
                     session['user_in_session'] = user_found_dict['Item']
                     #return render_template("home.html", user=user_found_dict['Item'])
                     return redirect(url_for('views.home', user=user_found_dict['Item']))
@@ -84,7 +82,7 @@ def sign_up():
             print(e.response['Error']['Message'])
 
         if len(username) < 4:
-            flash("Email must be greater than 4 characters.", category='error')
+            flash("Username must be greater than 4 characters.", category='error')
         elif 'Item' in response:
             flash('Username already exists. So the user already exists.', category='error')
         elif len(name) < 2:
