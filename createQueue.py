@@ -11,20 +11,22 @@ def build_msgBody(username: str) -> str:
     time_spent = []
     calories_spent = []
 
-    # aggiungo il tempo speso su ogni macchina
+    # aggiungo il Tempo speso su ogni macchina
     for i in range(4):
-        minutes = 60
-        arbitraty_value = 6
-        value = int(random.randint(0, 800) / minutes * arbitraty_value)
+        value = int(random.randint(0, 60)) # su ogni macchina ci sto massimo 60 minuti
         time_spent.append(str(value))
 
-    # aggiungo le calorie spese su ogni macchina
+    # aggiungo le Calorie spese su ogni macchina
+    sum = 0
     for item in time_spent:
-        calories_spent.append(str(int(item) * 6)) #moltiplico per 6 per calcolarmi le calorie perse in base alla quantità di tempo spesa.
+        value = int(item) * 6
+        sum += value
+        calories_spent.append(str(value)) #moltiplico per 6 per calcolarmi le calorie perse in base alla quantità di tempo spesa.
         #ovviamente 6 è un valore arbitrario e serve solo per simulare un minimo la realtà
 
-    msg_body = '{"username": "' + username + '", "time_spent": ' + str(time_spent) + ', "calories_spent": ' + str(
-        calories_spent) + '}'
+    print("Calories lost in total: " + str(sum))
+
+    msg_body = '{"username": "' + username + '", "time_spent": ' + str(time_spent) + ', "calories_spent": ' + str(calories_spent) + '}'
     msg_body = msg_body.replace("'", '"')
 
     return msg_body
@@ -42,10 +44,6 @@ if __name__ == '__main__':
 
     # Dati da inserire nel msg_body e successivamente da inviare nella Queue
     username = "xzan8189"
-    #time_spent = ['25', '35', '60', '40']
-    #calories_spent = ['100', '140', '220', '150'] non serve più, perché lo calcoli nella funzione 'build_msgBody'
-    # msg_body = '{"username": "%s","time_spent": %s,"calories_spent": %s}' % (username, str(time_spent), str(calories_spent))
-    # print(msg_body)
     msg_body = build_msgBody(username=username)
 
     response = client.send_message(
