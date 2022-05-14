@@ -11,12 +11,14 @@ def build_msgBody(username: str) -> str:
     time_spent = []
     calories_spent = []
 
+    # aggiungo il tempo speso su ogni macchina
     for i in range(4):
         minutes = 60
         arbitraty_value = 6
         value = int(random.randint(0, 800) / minutes * arbitraty_value)
         time_spent.append(str(value))
 
+    # aggiungo le calorie spese su ogni macchina
     for item in time_spent:
         calories_spent.append(str(int(item) * 6)) #moltiplico per 6 per calcolarmi le calorie perse in base alla quantità di tempo spesa.
         #ovviamente 6 è un valore arbitrario e serve solo per simulare un minimo la realtà
