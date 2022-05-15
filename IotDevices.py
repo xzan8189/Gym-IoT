@@ -1,45 +1,78 @@
-import time
+import json
+import random
 
 import boto3
-import datetime
-import random
-import json
+# Descrizione di alcuni parametri utilizzati nel codice
+# 'arbitraty_value': varrà 6 <- (15min/100cal). è un valore arbitrario e serve solo per simulare le calorie perse
+# immaginando che in 15 min perdi circa 100cal utilizzando la stessa forza in maniera costante
 
 
-# Variabili d'istanza
-dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:4566")
-table = dynamodb.Table('Users')
+def build_msgBody(username: str) -> str:
+    time_spent = []
+    calories_spent = []
 
-sqs = boto3.resource('sqs', endpoint_url='http://localhost:4566')
+    # aggiungo il Tempo speso su ogni macchina
+    for i in range(4):
+        value = int(random.randint(0, 60)) # su ogni macchina ci sto massimo 60 minuti
+        time_spent.append(str(value))
 
-# Dati da inviare nella queue
-username = "xzan8189"
-time_spent = ['25', '35', '60', '40']
-calories_spent = ['100', '140', '220', '150']
+    # aggiungo le Calorie spese su ogni macchina
+    sum = 0
+    for item in time_spent:
+        value = int(item) * 6
+        sum += value
+        calories_spent.append(str(value)) #moltiplico per 6 per calcolarmi le calorie perse in base alla quantità di tempo spesa.
+        #ovviamente 6 è un valore arbitrario e serve solo per simulare un minimo la realtà
 
-# Dopo fai una prova con questi array
-# time_spent = ["0", "35", "0", "40"]
-# calories_spent = ["0", "140", "0", "150"]
+    print("Calories lost in total: " + str(sum))
 
-# Dopo fai un'altra prova mandando un unico oggetto json, ma con array di più persone
-#for time_item, calories_item in zip(time_spent, calories_spent):
-#print(f'Caricando -> Time: {time_item}, Calories: {calories_item}')
+    msg_body = '{"username": "' + username + '", "time_spent": ' + str(time_spent) + ', "calories_spent": ' + str(calories_spent) + '}'
+    msg_body = msg_body.replace("'", '"')
 
-queue = sqs.get_queue_by_name(QueueName= "gym_queue")
-msg_body = '{"time_spent": ' + str(time_spent) + '," calories_spent": ' + str(calories_spent) + '}'
-msg_body = msg_body.replace("'", '"')
-#content = json.loads(msg_body)
-print("Caricato msg_body: " + msg_body)
-queue.send_message(MessageBody=msg_body)
+    return msg_body
 
-messages = []
-while True:
-	response = queue.receive_messages(MaxNumberOfMessages=10, VisibilityTimeout=10, WaitTimeSeconds=10)
-	if response:
-		messages.extend(response)
-		for message in messages:
-			content = json.loads(str(message.body))
-			print("Ricevuto: " + str(content))
-			message.delete()
-	else:
-		break
+
+client = boto3.client('sqs', endpoint_url='http://localhost:4566')
+
+if __name__ == '__main__':
+    machines = ["Cyclette", "Tapis roulant", "Elliptical bike", "Spin bike"]
+    for machine in machines:
+        response = client.create_queue(
+            QueueName = machine
+        )
+
+    response = client.list_queues(QueueNamePrefix="")
+    print('QueueUrls: \n' + str(response["QueueUrls"]) + '\n')
+
+    # Dati da inserire nel msg_body e successivamente da inviare nella Queue
+    username = "xzan8189"
+    msg_body = build_msgBody(username=username)
+
+    randomQueue = machines[random.randint(0, 3)]
+    response = client.send_message(
+        QueueUrl='http://localhost:4566/000000000000/' + randomQueue,
+        MessageBody=msg_body # il tipo del messaggio da inviare deve essere di tipo stringa
+    )
+
+    # ---------------- RICEZIONE MESSAGGI --------------
+    # response = client.receive_message(
+    #     QueueUrl='http://localhost:4566/000000000000/' + machines[0]
+    # )
+    #
+    # if 'Messages' in response:
+    #     for item in response['Messages']:
+    #         #print("item['Body']: " + item['Body'])
+    #         body = json.loads(item['Body'])
+    #         print("item['Body']: " + str(body))
+    #
+    #         response = client.delete_message(
+    #             QueueUrl='http://localhost:4566/000000000000/' + machines[0],
+    #             ReceiptHandle=item['ReceiptHandle']
+    #         )
+
+
+    #---------------- FINALE --------------
+    # for machine in machines:
+    #     client.delete_queue(
+    #         QueueUrl='http://localhost:4566/000000000000/' + machine
+    #     )
