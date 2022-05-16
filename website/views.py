@@ -25,7 +25,6 @@ def home():
             username = session['user_in_session']['username']
             user_found_dict = table.get_item(Key={'username': username})
             if len(user_found_dict) > 1:
-                user_found_obj = Utils.dictUser_to_object(user_found_dict)
                 session['user_in_session'] = user_found_dict['Item']
                 return render_template("home.html", user=user_found_dict['Item'], monthly_target_percentage=Utils.calculate_monthly_target_percentage(user_found_dict['Item']))
             else:

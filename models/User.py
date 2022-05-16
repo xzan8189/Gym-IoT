@@ -1,12 +1,13 @@
 class User:
 
     # Metodo costruttore
-    def __init__(self, username: str, name: str, surname: str, password: str, registration_date: str, sex: str, age: str, weight: str, height: str, calories_to_reach_today: str):
+    def __init__(self, username: str, name: str, surname: str, password: str, registration_date: str, last_time_user_was_updated: str, sex: str, age: str, weight: str, height: str, calories_to_reach_today: str):
         self.username = username
         self.name = name
         self.surname = surname
         self.password = password
         self.registration_date = registration_date
+        self.last_time_user_was_updated = last_time_user_was_updated
         self.sex = sex
         self.age = age
         self.weight = weight
@@ -24,6 +25,8 @@ class User:
         return self.password
     def getRegistration_date(self):
         return self.registration_date
+    def getLast_time_user_was_updated(self):
+        return self.last_time_user_was_updated
     def getSex(self):
         return self.sex
     def getAge(self):
@@ -48,6 +51,8 @@ class User:
         self.password = password
     def setRegistration_date(self, registration_date):
         self.registration_date = registration_date
+    def setLast_time_user_was_updated(self, last_time_user_was_updated):
+        self.last_time_user_was_updated = last_time_user_was_updated
     def setSex(self, sex):
         self.sex = sex
     def setAge(self, age):
@@ -75,6 +80,7 @@ class User:
                f"Surname: {str(self.getSurname())}, " \
                f"Password: {str(self.getPassword())}, " \
                f"Registration_date: {str(self.getRegistration_date())}, " \
+               f"Last_time_user_was_updated: {self.getLast_time_user_was_updated()}" \
                f"Sex: {self.getSex()}, " \
                f"Age: {self.getAge()}, " \
                f"Weight: {self.getWeight()}, " \

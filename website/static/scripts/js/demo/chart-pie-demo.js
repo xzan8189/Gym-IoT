@@ -8,6 +8,9 @@ function myPieChart(gym) {
     console.log('calories_lost_today: ' + gym['calories_lost_today']);
     console.log('calories_to_reach_today: ' + gym['calories_to_reach_today']);
     var calorie_mancanti_da_consumare = parseFloat(gym['calories_to_reach_today']) - parseFloat(gym['calories_lost_today'])
+    if (calorie_mancanti_da_consumare<0) {
+        calorie_mancanti_da_consumare = 0;
+    }
     console.log('Calorie mancanti: ' + calorie_mancanti_da_consumare);
     var ctx = document.getElementById("myPieChart");
 
@@ -16,7 +19,7 @@ function myPieChart(gym) {
       data: {
         labels: ["Calories left", "Calories already left today"],
         datasets: [{
-          data: [gym['calories_to_reach_today']-gym['calories_lost_today'], gym['calories_lost_today']],
+          data: [calorie_mancanti_da_consumare, gym['calories_lost_today']],
           backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
           hoverBackgroundColor: ['#2e59d9', '#17a673'],
           hoverBorderColor: "rgba(234, 236, 244, 1)",

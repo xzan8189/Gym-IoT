@@ -33,6 +33,7 @@ if __name__ == '__main__':
             surname=response['Item']['surname'],
             password=response['Item']['password'],
             registration_date=response['Item']['registration_date'],
+            last_time_user_was_updated=response['Item']['last_time_user_was_updated'],
             sex=response['Item']['info']['sex'],
             age=response['Item']['info']['age'],
             weight=response['Item']['info']['weight'],

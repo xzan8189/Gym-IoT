@@ -109,6 +109,7 @@ def sign_up():
                 surname=surname,
                 password=generate_password_hash(password1, method='sha256'),
                 registration_date=str(datetime.date(datetime.now())),
+                last_time_user_was_updated= str(datetime.today().strftime('%Y-%m-%d')),
                 sex=str(sex),
                 age=str(age),
                 weight=weight,

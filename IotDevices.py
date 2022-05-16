@@ -31,6 +31,17 @@ def build_msgBody(username: str) -> str:
 
     return msg_body
 
+def build_msgBody2(username: str) -> str:
+    value_time_spent = int(random.randint(0, 60)) # su ogni macchina ci sto massimo 60 minuti
+    value_calories_spent = value_time_spent * 6 #moltiplico per 6 per calcolarmi le calorie perse in base alla quantità di tempo spesa.
+        #ovviamente 6 è un valore arbitrario e serve solo per simulare un minimo la realtà
+
+    print("Calories lost on machine: " + str(value_calories_spent))
+
+    msg_body = '{"username": "' + username + '", "value_time_spent": ' + str(value_time_spent) + ', "value_calories_spent": ' + str(value_calories_spent) + '}'
+    msg_body = msg_body.replace("'", '"')
+
+    return msg_body
 
 client = boto3.client('sqs', endpoint_url='http://localhost:4566')
 
@@ -45,8 +56,8 @@ if __name__ == '__main__':
     print('QueueUrls: \n' + str(response["QueueUrls"]) + '\n')
 
     # Dati da inserire nel msg_body e successivamente da inviare nella Queue
-    username = "xzan8189"
-    msg_body = build_msgBody(username=username)
+    username = "prova"
+    msg_body = build_msgBody2(username=username)
 
     randomQueue = machines[random.randint(0, 3)]
     response = client.send_message(

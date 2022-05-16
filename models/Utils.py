@@ -22,6 +22,7 @@ class Utils:
         calories_to_reach_monthly = float(user['gym']['data']['calories_to_reach_today']) * (
                     workouts_per_week * number_of_weeks)
 
+        print(f'calculate_monthly_target_percentage: {calories_lost} * 100 / {calories_to_reach_monthly} = {int(calories_lost * 100 / calories_to_reach_monthly)}%')
         return int(calories_lost * 100 / calories_to_reach_monthly)
 
     @staticmethod
@@ -61,6 +62,7 @@ class Utils:
             'surname': obj_user.getSurname(),
             'password': obj_user.getPassword(),
             'registration_date': obj_user.getRegistration_date(),
+            'last_time_user_was_updated': obj_user.getLast_time_user_was_updated(),
             'info': {
                 "sex": obj_user.getSex(),
                 "age": obj_user.getAge(),

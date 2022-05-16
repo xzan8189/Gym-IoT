@@ -1,6 +1,70 @@
+import datetime
 import json
 
 import boto3
+from botocore.exceptions import ClientError
+
+def reset_donut_and_bar_chart(user):
+    time_spent = user['gym']['machines']['time_spent']
+    calories_spent = user['gym']['machines']['calories_spent']
+    calories_lost_today = user['gym']['data']['calories_lost_today']
+
+    # reset time_spent
+    for i in range(len(time_spent)):
+        time_spent[i] = "0"
+
+    # reset calories_spent
+    for i in range(len(calories_spent)):
+        calories_spent[i] = "0"
+
+    # reset calories_lost_today
+    user['gym']['data']['calories_lost_today'] = "0"
+
+def calculate_calorie_deficit(sex: str, weight: float, height: float, age: int) -> float:
+    if (sex == 'F'):
+        return (10 * weight) + (6.25 * height) - (5 * age) - 161
+    elif (sex == 'M'):
+        return (10 * weight) + (6.25 * height) - (5 * age) + 5
+
+def updateUser(user, msg_body, machine):
+    username = msg_body['username']
+    value_time_spent = int(msg_body['value_time_spent'])
+    value_calories_spent = int(msg_body['value_calories_spent'])
+
+    # update field 'last_time_user_was_updated'
+    # i need this information to understand when i must to restart the donut and bar chat
+    date_format = '%Y-%m-%d'
+    a = datetime.datetime.strptime(datetime.datetime.today().strftime('%Y-%m-%d'), date_format)
+    b = datetime.datetime.strptime(user['last_time_user_was_updated'], date_format)
+    delta = a - b
+    if delta.days != 0:
+        print("reset")
+        reset_donut_and_bar_chart(user=user)
+        user['last_time_user_was_updated'] = datetime.datetime.today().strftime('%Y-%m-%d')
+
+    print("Days: " + str(delta.days))
+
+    # I DON'T UPDATE FIELD '['info']['weight']' EVERYDAY: because if you update it everyday
+    # then it will be changed everyday the value 'monthly_target_percentage' passed from view.home, but we don't want this.
+    # We want that the 'weight' is going to be updated only at the end of the month
+    now = datetime.datetime.now()
+    if int(user['gym']['calories'][str(now.year)][now.month-1]) == 0: # it's a new month
+        user['info']['weight'] = str(float(user['info']['weight']) - float(user['gym']['data']['calories_lost'])) # update weight
+        user['gym']['data']['calories_to_reach_today'] = str(calculate_calorie_deficit(user['info']['sex'], float(user['info']['weight']), float(user['info']['height']), int(user['info']['age']))) # update the "fabbisogno calorico"
+
+    # update fields 'data'
+    user['gym']['data']['calories_lost'] = str(int(user['gym']['data']['calories_lost']) + value_calories_spent)
+    user['gym']['data']['calories_lost_today'] = str(int(user['gym']['data']['calories_lost_today']) + value_calories_spent)
+
+    # update fields 'machines'
+    index_machine = list(user['gym']['machines']['name_machine']).index(machine)
+    user['gym']['machines']['time_spent'][index_machine] = str(int(user['gym']['machines']['time_spent'][index_machine]) + value_time_spent)
+    user['gym']['machines']['calories_spent'][index_machine] = str(int(user['gym']['machines']['calories_spent'][index_machine]) + value_calories_spent)
+
+    # update fields 'calories'
+    user['gym']['calories'][str(now.year)][now.month-1] = str(int(user['gym']['calories'][str(now.year)][now.month-1]) + value_calories_spent)
+
+    return user
 
 
 def lambda_handler(event, context):
@@ -17,10 +81,27 @@ def lambda_handler(event, context):
             )
             if 'Messages' in response:
                 for item in response['Messages']:
-                    #print("item['Body']: " + item['Body'])
-                    body = json.loads(item['Body'])
-                    print("Queue: " + machine + ",\nitem['Body']: " + str(body))
+                    msg_body = json.loads(item['Body'])
+                    print("Queue: " + machine + ",\nitem['Body']: " + str(msg_body))
 
+                    # Get user from database
+                    try:
+                        response = table.get_item(Key={'username': msg_body['username']})
+                        if 'Item' in response:
+                            user = response['Item']
+                            print(user)
+                            user = updateUser(user=user, msg_body=msg_body, machine=machine)
+
+                            table.put_item(Item=user)
+
+                        else:
+                            print('User "' + msg_body['username'] + '" not found!')
+
+                    except ClientError as e:
+                        print(e.response['Error']['Message'])
+                    print()
+
+                    # Delete message from queue
                     response = client.delete_message(
                         QueueUrl='http://localhost:4566/000000000000/' + machine,
                         ReceiptHandle=item['ReceiptHandle']
