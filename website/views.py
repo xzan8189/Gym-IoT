@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import boto3
 from botocore.exceptions import ClientError
 from flask import Blueprint, render_template, request, flash, jsonify, session, url_for
@@ -26,7 +28,9 @@ def home():
             user_found_dict = table.get_item(Key={'username': username})
             if len(user_found_dict) > 1:
                 session['user_in_session'] = user_found_dict['Item']
-                return render_template("home.html", user=user_found_dict['Item'], monthly_target_percentage=Utils.calculate_monthly_target_percentage(user_found_dict['Item']))
+                return render_template("home.html", user=user_found_dict['Item'],
+                                       monthly_target_percentage=Utils.calculate_monthly_target_percentage(user_found_dict['Item']),
+                                       current_date=str(datetime.today().strftime('%B %d, %Y')))
             else:
                 flash('Username does not exist.', category='error')
                 return render_template("login.html")
