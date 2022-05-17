@@ -74,38 +74,53 @@ def lambda_handler(event, context):
 
     machines = ["Cyclette", "Tapis roulant", "Elliptical bike", "Spin bike"]
 
-    while True:
-        for machine in machines:
-            response = client.receive_message(
-                QueueUrl='http://localhost:4566/000000000000/' + machine
-            )
-            if 'Messages' in response:
-                for item in response['Messages']:
-                    msg_body = json.loads(item['Body'])
-                    print("Queue: " + machine + ",\nitem['Body']: " + str(msg_body))
+    #while True:
+    for machine in machines:
+        response = client.receive_message(
+            QueueUrl='http://localhost:4566/000000000000/' + machine
+        )
+        if 'Messages' in response:
+            for item in response['Messages']:
+                msg_body = json.loads(item['Body'])
+                print("Queue: " + machine + ",\nitem['Body']: " + str(msg_body))
 
-                    # Get user from database
-                    try:
-                        response = table.get_item(Key={'username': msg_body['username']})
-                        if 'Item' in response:
-                            user = response['Item']
-                            print(user)
+                # Get user from database
+                try:
+                    response = table.get_item(Key={'username': msg_body['username']})
+                    if 'Item' in response:
+                        user = response['Item']
+                        print(user)
+
+                        # Controllo che i parametri del messaggio siano corretti
+                        # In caso non lo siano allora invio un messaggio di errore alla coda "Errors"
+                        if ('username' not in msg_body or msg_body['username'] == "") or ('value_time_spent' not in msg_body or msg_body['value_time_spent'] == "") or ('value_calories_spent' not in msg_body or msg_body['value_calories_spent'] == ""):
+                            print("ERROR")
+                            username = "ERROR" if ('username' not in msg_body or msg_body['username'] == "") else msg_body['username']
+                            value_time_spent = "ERROR" if ('value_time_spent' not in msg_body or msg_body['value_time_spent'] == "") else msg_body['value_time_spent']
+                            value_calories_spent = "ERROR" if ('value_calories_spent' not in msg_body or msg_body['value_calories_spent'] == "") else msg_body['value_calories_spent']
+
+                            msg_error_body = '{"device_id": "' + str(machine) + '", "value_time_spent": "' + str(value_time_spent) + '", "value_calories_spent": "' + str(value_calories_spent)+ '"}'
+                            print("\n\nmsg_error_body: " + msg_error_body)
+                            response = client.send_message(
+                                QueueUrl='http://localhost:4566/000000000000/Errors',
+                                MessageBody=msg_error_body
+                            )
+                        else: # I parametri del messaggio vanno bene, quindi procedo con l'aggiornamento dell'utente
                             user = updateUser(user=user, msg_body=msg_body, machine=machine)
-
                             table.put_item(Item=user)
 
-                        else:
-                            print('User "' + msg_body['username'] + '" not found!')
+                    else:
+                        print('User "' + msg_body['username'] + '" not found!')
 
-                    except ClientError as e:
-                        print(e.response['Error']['Message'])
-                    print()
+                except ClientError as e:
+                    print(e.response['Error']['Message'])
+                print()
 
-                    # Delete message from queue
-                    response = client.delete_message(
-                        QueueUrl='http://localhost:4566/000000000000/' + machine,
-                        ReceiptHandle=item['ReceiptHandle']
-                    )
+                # Delete message from queue
+                response = client.delete_message(
+                    QueueUrl='http://localhost:4566/000000000000/' + machine,
+                    ReceiptHandle=item['ReceiptHandle']
+                )
 
-if __name__ == '__main__':
-    lambda_handler(None, None)
+# if __name__ == '__main__':
+#     lambda_handler(None, None)

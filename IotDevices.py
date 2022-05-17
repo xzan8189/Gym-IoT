@@ -33,12 +33,13 @@ def build_msgBody(username: str) -> str:
 
 def build_msgBody2(username: str) -> str:
     value_time_spent = int(random.randint(0, 60)) # su ogni macchina ci sto massimo 60 minuti
+    #value_time_spent = "" # serve per la coda 'Errors'
     value_calories_spent = value_time_spent * 6 #moltiplico per 6 per calcolarmi le calorie perse in base alla quantità di tempo spesa.
         #ovviamente 6 è un valore arbitrario e serve solo per simulare un minimo la realtà
 
     print("Calories lost on machine: " + str(value_calories_spent))
 
-    msg_body = '{"username": "' + username + '", "value_time_spent": ' + str(value_time_spent) + ', "value_calories_spent": ' + str(value_calories_spent) + '}'
+    msg_body = '{"username": "' + username + '", "value_time_spent": "' + str(value_time_spent) + '", "value_calories_spent": "' + str(value_calories_spent) + '"}'
     msg_body = msg_body.replace("'", '"')
 
     return msg_body
@@ -46,11 +47,15 @@ def build_msgBody2(username: str) -> str:
 client = boto3.client('sqs', endpoint_url='http://localhost:4566')
 
 if __name__ == '__main__':
+    # Creation for queues
     machines = ["Cyclette", "Tapis roulant", "Elliptical bike", "Spin bike"]
     for machine in machines:
-        response = client.create_queue(
+        response = client.create_queue( # Creo Queue per ogni macchina della gym
             QueueName = machine
         )
+    response = client.create_queue( # Creo Queue degli errori
+        QueueName="Errors"
+    )
 
     response = client.list_queues(QueueNamePrefix="")
     print('QueueUrls: \n' + str(response["QueueUrls"]) + '\n')
@@ -64,6 +69,11 @@ if __name__ == '__main__':
         QueueUrl='http://localhost:4566/000000000000/' + randomQueue,
         MessageBody=msg_body # il tipo del messaggio da inviare deve essere di tipo stringa
     )
+
+    # response = client.send_message(
+    #     QueueUrl='http://localhost:4566/000000000000/Errors',
+    #     MessageBody='{"device_id": "test_error","error_date": "test"}' # il tipo del messaggio da inviare deve essere di tipo stringa
+    # )
 
     # ---------------- RICEZIONE MESSAGGI --------------
     # response = client.receive_message(
@@ -87,3 +97,6 @@ if __name__ == '__main__':
     #     client.delete_queue(
     #         QueueUrl='http://localhost:4566/000000000000/' + machine
     #     )
+    # client.delete_queue(
+    #     QueueUrl='http://localhost:4566/000000000000/Errors'
+    # )
