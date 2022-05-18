@@ -3,8 +3,12 @@ import boto3
 import datetime
 import json
 
+from settings.config import DefaultConfig
+
+CONFIG = DefaultConfig()
+
 def lambda_handler(event, context):
-	key = "8r2OPGW4P30VW-UIpTL_E"
+	key = CONFIG.IFTTT_EVENT_EMAIL_ERROR
 	url = "https://maker.ifttt.com/trigger/email_error/with/key/"+key
 	for record in event['Records']:
 		payload = record['body']

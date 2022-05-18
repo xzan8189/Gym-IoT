@@ -3,11 +3,14 @@ from os import path
 
 from flask import Flask, render_template
 
+from settings.config import DefaultConfig
+
+CONFIG = DefaultConfig()
 
 def create_app():
     app = Flask(__name__)
     app.register_error_handler(404, page_not_found)
-    app.config['SECRET_KEY'] = 'stringa a caso'
+    app.config['SECRET_KEY'] = CONFIG.SECRET_KEY
 
     # Import Blueprints
     from .views import views
