@@ -15,6 +15,8 @@ IoT Gym nasce per questo scopo, sulla base delle informazioni raccolte dalle ses
 
 I sensori IoT, posizionati all'interno delle macchine, possono **misurare in maniera errata** le calorie consumate e/o il tempo di utilizzo sulla macchina. Nel caso in cui avvenga viene inviato un messaggio sulla coda degli Errori che triggera una Funzione Serverless che manda un email contenenente il <code>device ID</code>, che ha generato l'errore, il <code>value_time_spent</code> (tempo di utilizzo) e il <code>value_calories_spent</code> (calorie consumate)
 
+![loading...](./images/IFTTT.png)
+
 INGLESE
 
 IoT gym is a gym that measures the calories consumed by the client and is provided with a constant report on the progress of his workout.
