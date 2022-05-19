@@ -1,3 +1,36 @@
+# IOT Gym using Serverless Computing
+
+## Overview
+
+ITALIANO
+
+Palestra IoT è una palestra che misura le calorie consumate dal cliente, fornendogli un rapporto costante sull'andamento del suo allenamento.
+All'interno delle palestre vi sono macchine che registrano informazioni circa le calorie consumate e la durata dell'allenamento, ma purtroppo queste informazioni sono effimere, non vengono memorizzate in alcun modo (all'interno di un database) e per questo motivo non c'è la possibilità di ricontrollare tali informazioni per comprendere come migliorare il proprio workout!
+
+IoT Gym nasce per questo scopo, sulla base delle informazioni raccolte dalle sessioni di allenamento, vengono costruiti dei grafici, visualizzabili dal sito, così da tenere traccia delle seguenti informazioni:
+
+* Calorie consumate e tempo di utilizzo su ciascuna macchina della palestra
+* Calorie totali consumate ogni mese (è possibile confrontare le calorie consumate dell'anno corrente con quelle dell'anno precedente)
+* Calorie consumate in giornata
+
+I sensori IoT, posizionati all'interno delle macchine, possono **misurare in maniera errata** le calorie consumate e/o il tempo di utilizzo sulla macchina. Nel caso in cui avvenga viene inviato un messaggio sulla coda degli Errori che triggera una Funzione Serverless che manda un email contenenente il <code>device ID</code>, che ha generato l'errore, il <code>value_time_spent</code> (tempo di utilizzo) e il <code>value_calories_spent</code> (calorie consumate)
+
+INGLESE
+
+IoT gym is a gym that measures the calories consumed by the client and is provided with a constant report on the progress of his workout.
+Inside the gyms there are machines that record information about the calories consumed and the duration of the training, but unfortunately these informations are ephemeral, they are not stored in a database and therefore there is no possibility to go to double check these informations to understand how to improve your workout!
+
+
+
+
+
+
+
+
+
+
+
+
 * [english version](#sciot-project-idea)
 * [italian version](#idea-progetto-sciot)
 
