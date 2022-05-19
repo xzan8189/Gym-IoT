@@ -2,29 +2,21 @@
 
 ## Overview
 
-ITALIANO
+Gym IoT is a gym that measures the calories consumed by the client, providing him with a constant report on the progress of his workout.
+Inside the gyms there are machines that record informations about the calories consumed and the duration of the workout, but unfortunately these informations are ephemerals, they are not stored in any way (in a database) and for this reason there is no possibility to double-check these informations to understand how to improve your workout!
 
-Palestra IoT è una palestra che misura le calorie consumate dal cliente, fornendogli un rapporto costante sull'andamento del suo allenamento.
-All'interno delle palestre vi sono macchine che registrano informazioni circa le calorie consumate e la durata dell'allenamento, ma purtroppo queste informazioni sono effimere, non vengono memorizzate in alcun modo (all'interno di un database) e per questo motivo non c'è la possibilità di ricontrollare tali informazioni per comprendere come migliorare il proprio workout!
+IoT Gym was created for this purpose, based on the informations collected from the training sessions, graphs are built, which can be viewed from the web-site, so as to keep track of the following informations:
 
-IoT Gym nasce per questo scopo, sulla base delle informazioni raccolte dalle sessioni di allenamento, vengono costruiti dei grafici, visualizzabili dal sito, così da tenere traccia delle seguenti informazioni:
+* **Calories consumed** and **Time of use** on each machine in the gym
+* **Total calories consumed each month** (you can compare the calories consumed in the current year with those in the previous year)
+* **Calories consumed during the day**
 
-* Calorie consumate e tempo di utilizzo su ciascuna macchina della palestra
-* Calorie totali consumate ogni mese (è possibile confrontare le calorie consumate dell'anno corrente con quelle dell'anno precedente)
-* Calorie consumate in giornata
+The IoT sensors, positioned inside the machines, can  **measure incorrectly** the calories consumed and/or the time of use on the machine. If this occurs, a message is sent on the Error queue which triggers a Serverless Function which sends an email containing the <code>device ID</code>, which generated the error, the <code>value_time_spent</code> (usage time) and the <code>value_calories_spent</code> (calories consumed)
 
-I sensori IoT, posizionati all'interno delle macchine, possono **misurare in maniera errata** le calorie consumate e/o il tempo di utilizzo sulla macchina. Nel caso in cui avvenga viene inviato un messaggio sulla coda degli Errori che triggera una Funzione Serverless che manda un email contenenente il <code>device ID</code>, che ha generato l'errore, il <code>value_time_spent</code> (tempo di utilizzo) e il <code>value_calories_spent</code> (calorie consumate)
 
 <div align="center">
 <img src="./images/IFTTT.png" alt="loading..." width="80%" >
 </div>
-
-INGLESE
-
-IoT gym is a gym that measures the calories consumed by the client and is provided with a constant report on the progress of his workout.
-Inside the gyms there are machines that record information about the calories consumed and the duration of the training, but unfortunately these informations are ephemeral, they are not stored in a database and therefore there is no possibility to go to double check these informations to understand how to improve your workout!
-
-
 
 
 
