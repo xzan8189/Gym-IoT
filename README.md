@@ -42,10 +42,6 @@ The IoT sensors, positioned inside the machines, can  **measure incorrectly** th
 
 ### Setting up the environment
 
-```sh
-
-```
-
 **0. Clone the repository**
 
 ```sh
