@@ -143,7 +143,7 @@ aws lambda delete-function --function-name updateUserFunc --endpoint-url=http://
 
 **5. Set up a CloudWatch rule to trigger the Lambda function every 10 seconds**
 
-1. Creare the rule and save the Arn (it should be something like <code>arn:aws:events:us-east-2:000000000000:rule/calculateAvg</code>)
+1. Creare the rule and save the Arn (it should be something like <code>arn:aws:events:us-east-2:000000000000:rule/updateUser</code>)
 ```sh
 aws events put-rule --name updateUser --schedule-expression 'rate(10 seconds)' --endpoint-url=http://localhost:4566
 ```
