@@ -184,6 +184,7 @@ Now every 10 seconds the function *updateUserFunc* will be triggered.
 			
 	7. Click *Create action*, *Continue*, and *Finish*.
 
+2) Modify the variable `key` within the `emailError.py` function with your IFTT applet key. The key can be find clicking on the icon of the webhook and clicking on *Documentation*.
 
 
 
