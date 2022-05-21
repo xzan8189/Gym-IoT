@@ -22,9 +22,10 @@ The IoT sensors, positioned inside the machines, can  **measure incorrectly** th
 
 
 <div align="center">
-<img src="./images/Architettura (image).jpg" alt="loading..." width="80%" >
+<img src="./images/Architettura (image).png" alt="loading..." width="100%" >
 </div>
 
+* The IoT devices are simulated with a Python function using [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html) 
 
 
 
