@@ -39,6 +39,7 @@ The IoT sensors, positioned inside the machines, can  **measure incorrectly** th
 
 
 
+<!-- 
 * [english version](#sciot-project-idea)
 * [italian version](#idea-progetto-sciot)
 
@@ -98,3 +99,4 @@ Controllo dei parametri vitali dei clienti, che si allenano all'interno della pa
 	* Una volta che il cliente ha superato il proprio <code>tempo di utilizzo complessivo giornaliero</code> delle macchine viene notificato fornendogli alcune informazioni:
 		* Grafico dell'<code>andamento del battito cardiaco</code>  della giornata d’allenamento
 		* Gli viene consigliato di non continuare e che quindi la sua giornata di allenamento dovrebbe terminare.
+		-->
