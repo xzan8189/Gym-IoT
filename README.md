@@ -25,8 +25,14 @@ The IoT sensors, positioned inside the machines, can  **measure incorrectly** th
 <img src="./images/Architettura (image).png" alt="loading..." width="100%" >
 </div>
 
-* The IoT devices are simulated with a Python function using [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html) 
-
+* The Cloud environment is simulated using [LocalStack](https://localstack.cloud/) to replicate the [AWS services](https://aws.amazon.com/)
+* The IoT devices are simulated with a Python function using [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html) to send messages on the queues.
+* [Amazon DynamoDB](https://aws.amazon.com/dynamodb/) is the service used to built the database.
+* The DynamoDB GUI is available using dynamodb-admin.
+* The queues are implemented using [Amazon Simple Queue Service (SQS)](https://aws.amazon.com/sqs/)
+* The functions are Serveless functions deployed on [AWS Lambda](https://aws.amazon.com/lambda/)
+	* The time-triggered function is implemented using [Amazon EventBridge](https://aws.amazon.com/eventbridge/)
+* The error email is sent using [IFTT](https://ifttt.com/)
 
 
 
