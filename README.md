@@ -67,6 +67,118 @@ aws sqs create-queue --queue-name Elliptical bike --endpoint-url=http://localhos
 aws sqs create-queue --queue-name Spin bike --endpoint-url=http://localhost:4566
 ```
 
+* Check that the queues are been correctly created
+
+```sh
+aws sqs list-queues --endpoint-url=http://localhost:4566
+```
+
+**3. Create the DynamoDB table and populate it**
+
+1. Use the python code to create the DynamoDB table
+```sh
+python3 settings/createTable.py
+```
+
+2. Check that the table is been correctly created
+```sh
+aws dynamodb list-tables --endpoint-url=http://localhost:4566
+```
+
+3. Populate the tables with some data
+```sh
+python3 settings/loadData.py
+```
+
+4. Check that the table are been correctly populated using the AWS CLI (Press q to exit)
+```sh
+aws dynamodb scan --table-name Campania --endpoint-url=http://localhost:4566
+```
+
+or using the (dynamodb-admin) GUI with the command
+```sh
+DYNAMO_ENDPOINT=http://0.0.0.0:4566 dynamodb-admin
+```
+
+and then going to http://localhost:8001
+
+**4. Create the time-triggered Lambda function to elaborate the data**
+
+1. Create the role
+```sh
+aws iam create-role --role-name lambdarole --assume-role-policy-document file://settings/role_policy.json --query 'Role.Arn' --endpoint-url=http://localhost:4566
+```
+
+2. Attach the policy 
+```sh
+aws iam put-role-policy --role-name lambdarole --policy-name lambdapolicy --policy-document file://settings/policy.json --endpoint-url=http://localhost:4566
+```
+
+3. Create the zip file
+```sh
+zip updateUserFunc.zip settings/updateUserFunc.py
+```
+
+4. Create the function and save the Arn (it should be something like <code>arn:aws:lambda:us-east-2:000000000000:function:updateUserFunc</code>
+
+
+```sh
+aws lambda create-function --function-name updateUserFunc --zip-file fileb://updateUserFunc.zip --handler settings/updateUserFunc.lambda_handler --runtime python3.8 --role arn:aws:iam::000000000000:role/lambdarole --endpoint-url=http://localhost:4566
+```
+
+> if you want delete the lambda function, digit this:
+```sh
+aws lambda delete-function --function-name updateUserFunc --endpoint-url=http://localhost:4566
+```
+
+5. Test the function:
+
+	* simulate the messages sent by some IoT devices
+	```sh
+	python3 IoTDevices.py
+	```
+
+	* manually invoke the function (it may take some times)
+	```sh
+	aws lambda invoke --function-name updateUserFunc --payload fileb://settings/userdata.json out --endpoint-url=http://localhost:4566
+	```
+
+	* check within the table that items are changed
+
+**5. Set up a CloudWatch rule to trigger the Lambda function every 10 seconds**
+
+1. Creare the rule and save the Arn (it should be something like <code>arn:aws:events:us-east-2:000000000000:rule/calculateAvg</code>)
+```sh
+aws events put-rule --name updateUser --schedule-expression 'rate(10 seconds)' --endpoint-url=http://localhost:4566
+```
+
+2. Check that the rule has been correctly created with the frequency wanted
+```sh
+aws events list-rules --endpoint-url=http://localhost:4566
+```
+
+3. Add permissions to the rule created
+```sh
+aws lambda add-permission --function-name updateUserFunc --statement-id updateUser --action 'lambda:InvokeFunction' --principal events.amazonaws.com --source-arn arn:aws:events:us-east-2:000000000000:rule/updateUserFunc --endpoint-url=http://localhost:4566
+```
+
+4. Add the lambda function to the rule using the JSON file containing the Lambda function Arn
+```sh
+aws events put-targets --rule updateUser --targets file://settings/targets.json --endpoint-url=http://localhost:4566
+```
+
+Now every 10 seconds the function *updateUserFunc* will be triggered.
+
+
+
+
+
+
+
+
+
+
+
 <!-- 
 * [english version](#sciot-project-idea)
 * [italian version](#idea-progetto-sciot)
