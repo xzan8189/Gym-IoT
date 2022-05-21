@@ -176,13 +176,11 @@ Now every 10 seconds the function *updateUserFunc* will be triggered.
 	6. Click *Send me an email* and fill the fields as follow:
 		
 		* *Subject*: <code>[GymIoT] Attention a device encountered an error!</code>
-		* *Body*: 
-
-			<code><b>Device_id</b>: {{Value1}}<br>
-			<b>When</b>: {{OccurredAt}}<br>
-			<b>Extra Data</b>:<br>
-			value_time_spent: {{Value2}},<br>
-			value_calories_spent: {{Value3}}</code>
+		* *Body*: <code><b>Device_id</b>: {{Value1}}<br>
+				  <b>When</b>: {{OccurredAt}}<br>
+				  <b>Extra Data</b>:<br>
+				  value_time_spent: {{Value2}},<br>
+				  value_calories_spent: {{Value3}}</code>
 			
 	7. Click *Create action*, *Continue*, and *Finish*.
 
