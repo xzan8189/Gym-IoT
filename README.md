@@ -44,19 +44,19 @@ The IoT sensors, positioned inside the machines, can  **measure incorrectly** th
 
 **0. Clone the repository**
 
-```sh
+```bash
 git clone https://github.com/xzan8189/SCIOT_private.git
 ```
 
 **1. Launch [LocalStack](https://localstack.cloud/)**
 
-```sh
+```bash
 docker run --rm -it -p 4566:4566 -p 4571:4571 localstack/localstack
 ```
 
 **2. Create a SQS queue for each machine**
 
-```sh
+```bash
 aws sqs create-queue --queue-name Cyclette --endpoint-url=http://localhost:4566
 aws sqs create-queue --queue-name Tapis roulant --endpoint-url=http://localhost:4566
 aws sqs create-queue --queue-name Elliptical bike --endpoint-url=http://localhost:4566
@@ -184,13 +184,50 @@ Now every 10 seconds the function *updateUserFunc* will be triggered.
 			
 	7. Click *Create action*, *Continue*, and *Finish*.
 
-2) Modify the variable `key` within the `emailError.py` function with your IFTT applet key. The key can be find clicking on the icon of the webhook and clicking on *Documentation*.
+2) Modify the variable `IFTTT_EVENT_EMAIL_ERROR` within the `config.py` function with your IFTT applet key. The key can be find clicking on the icon of the webhook and clicking on *Documentation*.
 
+3) Zip the Python file and create the Lambda function
+```bash
+zip emailError.zip settings/emailError.py settings/config.py
+```
 
+```bash
+aws lambda create-function --function-name emailError --zip-file fileb://emailError.zip --handler settings/emailError.lambda_handler --runtime python3.8 --role arn:aws:iam::000000000000:role/lambdarole --endpoint-url=http://localhost:4566
+```
 
+> if you want delete the lambda function, digit this:
+```sh
+aws lambda delete-function --function-name emailError --endpoint-url=http://localhost:4566
+```
 
+4) Create the event source mapping between the funcion and the queue
+```sh
+aws lambda create-event-source-mapping --function-name emailError --batch-size 5 --maximum-batching-window-in-seconds 60 --event-source-arn arn:aws:sqs:us-east-2:000000000000:Errors --endpoint-url=http://localhost:4566
+```
 
+5) Test the mapping sending a message on the error queue and check that an email is sent
+```sh
+aws sqs send-message --queue-url http://localhost:4566/000000000000/Errors --message-body '{"device_id": "Cyclette","value_time_spent": "ERROR","value_calories_spent": "ERROR"}' --endpoint-url=http://localhost:4566
+```
 
+### Use it
+1. Simulate the IoT devices
+```sh
+python3 IoTdevices.py
+```
+
+2. Wait that the Lambda function *updateUserFunc* compute the data (wait 10 seconds) or invoke it manually
+
+3. Run flask with the command
+```sh
+flask run
+```
+
+4. Go to the Website and see the new computed informations
+
+## Future developments
+
+* Write something
 
 <!-- 
 * [english version](#sciot-project-idea)
