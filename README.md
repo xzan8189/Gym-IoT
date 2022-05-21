@@ -2,25 +2,189 @@
 
 ## Overview
 
-ITALIANO
+Gym IoT is a gym that measures the calories consumed by the client, providing him with a constant report on the progress of his workout.
+Inside the gyms there are machines that record informations about the calories consumed and the duration of the workout, but unfortunately these informations are ephemerals, they are not stored in any way (in a database) and for this reason there is no possibility to double-check these informations to understand how to improve your workout!
 
-Palestra IoT è una palestra che misura le calorie consumate dal cliente, fornendogli un rapporto costante sull'andamento del suo allenamento.
-All'interno delle palestre vi sono macchine che registrano informazioni circa le calorie consumate e la durata dell'allenamento, ma purtroppo queste informazioni sono effimere, non vengono memorizzate in alcun modo (all'interno di un database) e per questo motivo non c'è la possibilità di ricontrollare tali informazioni per comprendere come migliorare il proprio workout!
+IoT Gym was created for this purpose, based on the informations collected from the training sessions, graphs are built, which can be viewed from the web-site, so as to keep track of the following informations:
 
-IoT Gym nasce per questo scopo, sulla base delle informazioni raccolte dalle sessioni di allenamento, vengono costruiti dei grafici, visualizzabili dal sito, così da tenere traccia delle seguenti informazioni:
+* **Calories consumed** and **Time of use** on each machine in the gym
+* **Total calories consumed each month** (you can compare the calories consumed in the current year with those in the previous year)
+* **Calories consumed during the day**
 
-* Calorie consumate e tempo di utilizzo su ciascuna macchina della palestra
-* Calorie totali consumate ogni mese (è possibile confrontare le calorie consumate dell'anno corrente con quelle dell'anno precedente)
-* Calorie consumate in giornata
-
-I sensori IoT, posizionati all'interno delle macchine, possono **misurare in maniera errata** le calorie consumate e/o il tempo di utilizzo sulla macchina. Nel caso in cui avvenga viene inviato un messaggio sulla coda degli Errori che triggera una Funzione Serverless che manda un email contenenente il <code>device ID</code>, che ha generato l'errore, il <code>value_time_spent</code> (tempo di utilizzo) e il <code>value_calories_spent</code> (calorie consumate)
-
-INGLESE
-
-IoT gym is a gym that measures the calories consumed by the client and is provided with a constant report on the progress of his workout.
-Inside the gyms there are machines that record information about the calories consumed and the duration of the training, but unfortunately these informations are ephemeral, they are not stored in a database and therefore there is no possibility to go to double check these informations to understand how to improve your workout!
+The IoT sensors, positioned inside the machines, can  **measure incorrectly** the calories consumed and/or the time of use on the machine. If this occurs, a message is sent on the Error queue which triggers a Serverless Function which sends an email containing the <code>device ID</code>, which generated the error, the <code>value_time_spent</code> (usage time) and the <code>value_calories_spent</code> (calories consumed)
 
 
+<div align="center">
+<img src="./images/IFTTT.png" alt="loading..." width="80%" >
+</div>
+
+## Architecture
+
+<div align="center">
+<img src="./images/Architettura (image).png" alt="loading..." width="100%" >
+</div>
+
+* The Cloud environment is simulated using [LocalStack](https://localstack.cloud/) to replicate the [AWS services](https://aws.amazon.com/)
+* The IoT devices are simulated with a Python function using [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html) to send messages on the queues.
+* [Amazon DynamoDB](https://aws.amazon.com/dynamodb/) is the service used to built the database.
+* The DynamoDB GUI is available using dynamodb-admin.
+* The queues are implemented using [Amazon Simple Queue Service (SQS)](https://aws.amazon.com/sqs/)
+* The functions are Serveless functions deployed on [AWS Lambda](https://aws.amazon.com/lambda/)
+	* The time-triggered function is implemented using [Amazon EventBridge](https://aws.amazon.com/eventbridge/)
+* The error email is sent using [IFTT](https://ifttt.com/)
+
+## Installation and usage
+
+### Prerequisites
+1. [Docker](https://docs.docker.com/get-docker/)
+2. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+3. [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html)
+
+### Setting up the environment
+
+**0. Clone the repository**
+
+```sh
+git clone https://github.com/xzan8189/SCIOT_private.git
+```
+
+**1. Launch [LocalStack](https://localstack.cloud/)**
+
+```sh
+docker run --rm -it -p 4566:4566 -p 4571:4571 localstack/localstack
+```
+
+**2. Create a SQS queue for each machine**
+
+```sh
+aws sqs create-queue --queue-name Cyclette --endpoint-url=http://localhost:4566
+aws sqs create-queue --queue-name Tapis roulant --endpoint-url=http://localhost:4566
+aws sqs create-queue --queue-name Elliptical bike --endpoint-url=http://localhost:4566
+aws sqs create-queue --queue-name Spin bike --endpoint-url=http://localhost:4566
+```
+
+* Check that the queues are been correctly created
+
+```sh
+aws sqs list-queues --endpoint-url=http://localhost:4566
+```
+
+**3. Create the DynamoDB table and populate it**
+
+1. Use the python code to create the DynamoDB table
+```sh
+python3 settings/createTable.py
+```
+
+2. Check that the table is been correctly created
+```sh
+aws dynamodb list-tables --endpoint-url=http://localhost:4566
+```
+
+3. Populate the tables with some data
+```sh
+python3 settings/loadData.py
+```
+
+4. Check that the table are been correctly populated using the AWS CLI (Press q to exit)
+```sh
+aws dynamodb scan --table-name Users --endpoint-url=http://localhost:4566
+```
+
+or using the (dynamodb-admin) GUI with the command
+```sh
+DYNAMO_ENDPOINT=http://0.0.0.0:4566 dynamodb-admin
+```
+
+and then going to http://localhost:8001
+
+**4. Create the time-triggered Lambda function to elaborate the data**
+
+1. Create the role
+```sh
+aws iam create-role --role-name lambdarole --assume-role-policy-document file://settings/role_policy.json --query 'Role.Arn' --endpoint-url=http://localhost:4566
+```
+
+2. Attach the policy 
+```sh
+aws iam put-role-policy --role-name lambdarole --policy-name lambdapolicy --policy-document file://settings/policy.json --endpoint-url=http://localhost:4566
+```
+
+3. Create the zip file
+```sh
+zip updateUserFunc.zip settings/updateUserFunc.py
+```
+
+4. Create the function and save the Arn (it should be something like <code>arn:aws:lambda:us-east-2:000000000000:function:updateUserFunc</code>
+
+
+```sh
+aws lambda create-function --function-name updateUserFunc --zip-file fileb://updateUserFunc.zip --handler settings/updateUserFunc.lambda_handler --runtime python3.8 --role arn:aws:iam::000000000000:role/lambdarole --endpoint-url=http://localhost:4566
+```
+
+> if you want delete the lambda function, digit this:
+```sh
+aws lambda delete-function --function-name updateUserFunc --endpoint-url=http://localhost:4566
+```
+
+5. Test the function:
+
+	* simulate the messages sent by some IoT devices
+	```sh
+	python3 IoTDevices.py
+	```
+
+	* manually invoke the function (it may take some times)
+	```sh
+	aws lambda invoke --function-name updateUserFunc --payload fileb://settings/userdata.json out --endpoint-url=http://localhost:4566
+	```
+
+	* check within the table that items are changed
+
+**5. Set up a CloudWatch rule to trigger the Lambda function every 10 seconds**
+
+1. Creare the rule and save the Arn (it should be something like <code>arn:aws:events:us-east-2:000000000000:rule/calculateAvg</code>)
+```sh
+aws events put-rule --name updateUser --schedule-expression 'rate(10 seconds)' --endpoint-url=http://localhost:4566
+```
+
+2. Check that the rule has been correctly created with the frequency wanted
+```sh
+aws events list-rules --endpoint-url=http://localhost:4566
+```
+
+3. Add permissions to the rule created
+```sh
+aws lambda add-permission --function-name updateUserFunc --statement-id updateUser --action 'lambda:InvokeFunction' --principal events.amazonaws.com --source-arn arn:aws:events:us-east-2:000000000000:rule/updateUserFunc --endpoint-url=http://localhost:4566
+```
+
+4. Add the lambda function to the rule using the JSON file containing the Lambda function Arn
+```sh
+aws events put-targets --rule updateUser --targets file://settings/targets.json --endpoint-url=http://localhost:4566
+```
+
+Now every 10 seconds the function *updateUserFunc* will be triggered.
+
+**6. Set up the Lambda function triggered by SQS messages that notifies errors in IoT devices via email**
+
+1) Create the IFTT Applet
+	1. Go to https://ifttt.com/ and sign-up or log-in if you already have an account.
+	2. On the main page, click *Create* to create a new applet.
+	3. Click "*If This*", type *"webhooks"* in the search bar, and choose the *Webhooks* service.
+	4. Select "*Receive a web request*" and write *"email_error"* in the "*Event Name*" field. Save the event name since it is required to trigger the event. Click *Create trigger*.
+	5. In the applet page click *Then That*, type *"email"* in the search bar, and select *Email*.
+	6. Click *Send me an email* and fill the fields as follow:
+		
+		* *Subject*: <code>[GymIoT] Attention a device encountered an error!</code>
+		* *Body*: <code><b>Device_id</b>: {{Value1}}<br>
+				  <b>When</b>: {{OccurredAt}}<br>
+				  <b>Extra Data</b>:<br>
+				  value_time_spent: {{Value2}},<br>
+				  value_calories_spent: {{Value3}}</code>
+			
+	7. Click *Create action*, *Continue*, and *Finish*.
+
+2) Modify the variable `key` within the `emailError.py` function with your IFTT applet key. The key can be find clicking on the icon of the webhook and clicking on *Documentation*.
 
 
 
@@ -28,9 +192,7 @@ Inside the gyms there are machines that record information about the calories co
 
 
 
-
-
-
+<!-- 
 * [english version](#sciot-project-idea)
 * [italian version](#idea-progetto-sciot)
 
@@ -90,3 +252,4 @@ Controllo dei parametri vitali dei clienti, che si allenano all'interno della pa
 	* Una volta che il cliente ha superato il proprio <code>tempo di utilizzo complessivo giornaliero</code> delle macchine viene notificato fornendogli alcune informazioni:
 		* Grafico dell'<code>andamento del battito cardiaco</code>  della giornata d’allenamento
 		* Gli viene consigliato di non continuare e che quindi la sua giornata di allenamento dovrebbe terminare.
+		-->
