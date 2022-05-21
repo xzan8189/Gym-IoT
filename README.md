@@ -20,7 +20,6 @@ The IoT sensors, positioned inside the machines, can  **measure incorrectly** th
 
 ## Architecture
 
-
 <div align="center">
 <img src="./images/Architettura (image).png" alt="loading..." width="100%" >
 </div>
@@ -34,10 +33,39 @@ The IoT sensors, positioned inside the machines, can  **measure incorrectly** th
 	* The time-triggered function is implemented using [Amazon EventBridge](https://aws.amazon.com/eventbridge/)
 * The error email is sent using [IFTT](https://ifttt.com/)
 
+## Installation and usage
 
+### Prerequisites
+1. [Docker](https://docs.docker.com/get-docker/)
+2. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+3. [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html)
 
+### Setting up the environment
 
+```sh
 
+```
+
+**0. Clone the repository**
+
+```sh
+git clone https://github.com/xzan8189/SCIOT_private.git
+```
+
+**1. Launch [LocalStack](https://localstack.cloud/)**
+
+```sh
+docker run --rm -it -p 4566:4566 -p 4571:4571 localstack/localstack
+```
+
+**2. Create a SQS queue for each machine**
+
+```sh
+aws sqs create-queue --queue-name Cyclette --endpoint-url=http://localhost:4566
+aws sqs create-queue --queue-name Tapis roulant --endpoint-url=http://localhost:4566
+aws sqs create-queue --queue-name Elliptical bike --endpoint-url=http://localhost:4566
+aws sqs create-queue --queue-name Spin bike --endpoint-url=http://localhost:4566
+```
 
 <!-- 
 * [english version](#sciot-project-idea)
