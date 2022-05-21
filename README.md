@@ -165,8 +165,15 @@ aws events put-targets --rule updateUser --targets file://settings/targets.json 
 
 Now every 10 seconds the function *updateUserFunc* will be triggered.
 
+**6. Set up the Lambda function triggered by SQS messages that notifies errors in IoT devices via email**
 
-
+1) Create the IFTT Applet
+	1. Go to https://ifttt.com/ and sign-up or log-in if you already have an account.
+	2. On the main page, click *Create* to create a new applet.
+	3. Click "*If This*", type *"webhooks"* in the search bar, and choose the *Webhooks* service.
+	4. Select "*Receive a web request*" and write *"email_error"* in the "*Event Name*" field. Save the event name since it is required to trigger the event. Click *Create trigger*.
+	5. In the applet page click *Then That*, type *"email"* in the search bar, and select *Email*.
+	6. Click *Send me an email* and fill the fields as follow:
 
 
 
