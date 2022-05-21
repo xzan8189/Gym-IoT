@@ -88,7 +88,7 @@ python3 settings/loadData.py
 
 4. Check that the table are been correctly populated using the AWS CLI (Press q to exit)
 ```sh
-aws dynamodb scan --table-name Campania --endpoint-url=http://localhost:4566
+aws dynamodb scan --table-name Users --endpoint-url=http://localhost:4566
 ```
 
 or using the (dynamodb-admin) GUI with the command
