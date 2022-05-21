@@ -2,7 +2,7 @@
 
 ## Overview
 
-Gym IoT is a gym that measures the calories consumed by the client, providing him with a constant report on the progress of his workout.
+Gym IoT is a gym that measures the calories consumed by the client, providing him a constant report on the progress of his workout.
 Inside the gyms there are machines that record informations about the calories consumed and the duration of the workout, but unfortunately these informations are ephemerals, they are not stored in any way (in a database) and for this reason there is no possibility to double-check these informations to understand how to improve your workout!
 
 IoT Gym was created for this purpose, based on the informations collected from the training sessions, graphs are built, which can be viewed from the web-site, so as to keep track of the following informations:
