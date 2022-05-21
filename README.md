@@ -18,7 +18,12 @@ The IoT sensors, positioned inside the machines, can  **measure incorrectly** th
 <img src="./images/IFTTT.png" alt="loading..." width="80%" >
 </div>
 
+## Architecture
 
+
+<div align="center">
+<img src="./images/Architettura (image).jpg" alt="loading..." width="80%" >
+</div>
 
 
 
