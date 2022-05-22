@@ -59,9 +59,9 @@ docker run --rm -it -p 4566:4566 -p 4571:4571 localstack/localstack
 
 ```bash
 aws sqs create-queue --queue-name Cyclette --endpoint-url=http://localhost:4566
-aws sqs create-queue --queue-name "Tapis roulant" --endpoint-url=http://localhost:4566
-aws sqs create-queue --queue-name "Elliptical bike" --endpoint-url=http://localhost:4566
-aws sqs create-queue --queue-name "Spin bike" --endpoint-url=http://localhost:4566
+aws sqs create-queue --queue-name Tapis_roulant --endpoint-url=http://localhost:4566
+aws sqs create-queue --queue-name Elliptical_bike --endpoint-url=http://localhost:4566
+aws sqs create-queue --queue-name Spin_bike --endpoint-url=http://localhost:4566
 aws sqs create-queue --queue-name Errors --endpoint-url=http://localhost:4566
 ```
 
