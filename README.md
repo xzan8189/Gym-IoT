@@ -62,6 +62,7 @@ aws sqs create-queue --queue-name Cyclette --endpoint-url=http://localhost:4566
 aws sqs create-queue --queue-name "Tapis roulant" --endpoint-url=http://localhost:4566
 aws sqs create-queue --queue-name "Elliptical bike" --endpoint-url=http://localhost:4566
 aws sqs create-queue --queue-name "Spin bike" --endpoint-url=http://localhost:4566
+aws sqs create-queue --queue-name Errors --endpoint-url=http://localhost:4566
 ```
 
 * Check that the queues are been correctly created
