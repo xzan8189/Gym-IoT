@@ -235,4 +235,6 @@ export FLASK_APP=./main.py; flask run
 
 ## Future developments
 
-* Write something
+* **Track the change of the weight**: Ability to track the change in your weight over the weeks/months
+* **Improving the user-experience**: Providing to the customer a history of all the graphs, so that he can constantly compare with himself (many times this is the best way to improve)
+* **Training Card**: Recommending a training schedule based on the customer’s performance, which contains all the machines and exercises to execute.
