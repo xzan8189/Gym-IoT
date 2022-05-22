@@ -19,7 +19,7 @@
           "2021": ["0", "20000", "5000", "9000", "10000", "20000", "1000", "25000", "20000", "30000", "25000", "40000"]
         },
         "machines": {
-          "name_machine": ["Cyclette", "Tapis roulant", "Elliptical bike", "Spin bike"],
+          "name_machine": ["Cyclette", "Tapis_roulant", "Elliptical_bike", "Spin_bike"],
           "time_spent": ["12", "30", "60", "100"],
           "calories_spent": ["50", "80", "100", "130"]
         },
@@ -48,7 +48,7 @@
           "2022": ["0", "10000", "5000", "15000", "10000", "20000", "15000", "25000", "20000", "30000", "25000", "40000"]
         },
         "machines": {
-          "name_machine": ["Cyclette", "Tapis roulant", "Elliptical bike", "Spin bike"],
+          "name_machine": ["Cyclette", "Tapis_roulant", "Elliptical_bike", "Spin_bike"],
           "time_spent": ["0", "0", "0", "0"],
           "calories_spent": ["0", "0", "0", "0"]
         },

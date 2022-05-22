@@ -74,7 +74,7 @@ class Utils:
                     str(datetime.datetime.now().year): ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
                 },
                 "machines": {
-                    "name_machine": ["Cyclette", "Tapis roulant", "Elliptical bike", "Spin bike"],
+                    "name_machine": ["Cyclette", "Tapis_roulant", "Elliptical_bike", "Spin_bike"],
                     "time_spent": ["0", "0", "0", "0"],
                     "calories_spent": ["0", "0", "0", "0"]
                 },

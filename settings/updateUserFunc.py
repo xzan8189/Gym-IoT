@@ -72,7 +72,7 @@ def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:4566")
     table = dynamodb.Table('Users')
 
-    machines = ["Cyclette", "Tapis roulant", "Elliptical bike", "Spin bike"]
+    machines = ["Cyclette", "Tapis_roulant", "Elliptical_bike", "Spin_bike"]
 
     #while True:
     for machine in machines:
