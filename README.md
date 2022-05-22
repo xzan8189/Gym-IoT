@@ -46,7 +46,7 @@ The IoT sensors, positioned inside the machines, can  **measure incorrectly** th
 **0. Clone the repository**
 
 ```bash
-git clone https://github.com/xzan8189/SCIOT_private.git
+git clone https://github.com/xzan8189/Gym-IoT.git
 ```
 
 **1. Launch [LocalStack](https://localstack.cloud/)**
