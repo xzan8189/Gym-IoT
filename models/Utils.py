@@ -8,15 +8,16 @@ class Utils:
     # Kcal che deve perdere il cliente giornalmente
     @staticmethod
     def calculate_calorie_deficit(sex: str, weight: float, height: float, age: int) -> float:
-        if (sex == 'F'):
+        # Mifflin-St. Jeor equation
+        if (sex == 'F'): # for Females
             return (10 * weight) + (6.25 * height) - (5 * age) - 161
-        elif (sex == 'M'):
+        elif (sex == 'M'): # for Fales
             return (10 * weight) + (6.25 * height) - (5 * age) + 5
 
     @staticmethod
     def calculate_monthly_target_percentage(user: dict) -> int:
-        workouts_per_week = 3
-        number_of_weeks = 4  # sarebbero le settimane del mese, ma negli sviluppi futuri si potrebbe modificare questo parametro a piacimento
+        workouts_per_week = 3 # quante volte va in palestra, ma negli sviluppi futuri si potrebbe modificare questo parametro a piacimento
+        number_of_weeks = 4  # sarebbero le settimane del mese
 
         calories_lost = float(user['gym']['data']['calories_lost'])
         calories_to_reach_monthly = float(user['gym']['data']['calories_to_reach_today']) * (
