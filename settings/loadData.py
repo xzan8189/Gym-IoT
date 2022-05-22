@@ -16,7 +16,7 @@ def load_users(users):
         table.put_item(Item=customer)
 
 if __name__ == '__main__':
-    with open("userdata.json") as json_file:
+    with open("settings/userdata.json") as json_file:
         user_list = json.load(json_file, parse_float=Decimal)
 
     load_users(user_list)
