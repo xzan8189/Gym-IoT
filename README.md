@@ -83,7 +83,13 @@ python3 settings/createTable.py
 aws dynamodb list-tables --endpoint-url=http://localhost:4566
 ```
 
-3. Populate the tables with some data
+3. Populate the tables with some data, but before set `PYTHONPATH` environment variable in root project directory
+```bash
+export PYTHONPATH=.
+```
+
+and finally:
+
 ```bash
 python3 settings/loadData.py
 ```
@@ -133,7 +139,7 @@ aws lambda delete-function --function-name updateUserFunc --endpoint-url=http://
 
 	* simulate the messages sent by some IoT devices
 	```bash
-	python3 IoTDevices.py
+	python3 IotDevices.py
 	```
 
 	* manually invoke the function (it may take some times)
@@ -220,9 +226,9 @@ python3 IoTdevices.py
 
 2. Wait that the Lambda function *updateUserFunc* compute the data (wait 10 seconds) or invoke it manually
 
-3. Run flask with the command
+3. Run flask with the command:
 ```sh
-flask run
+export FLASK_APP=./main.py; flask run
 ```
 
 4. Go to the Website and see the new computed informations
