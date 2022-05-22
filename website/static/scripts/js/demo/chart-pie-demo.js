@@ -17,7 +17,7 @@ function myPieChart(gym) {
     var myPieChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: ["Calories left", "Calories already left today"],
+        labels: ["Calories to left", "Calories already left today"],
         datasets: [{
           data: [calorie_mancanti_da_consumare, gym['calories_lost_today']],
           backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
