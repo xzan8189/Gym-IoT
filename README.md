@@ -149,11 +149,11 @@ aws lambda delete-function --function-name updateUserFunc --endpoint-url=http://
 
 	* check within the table that items are changed
 
-**5. Set up a CloudWatch rule to trigger the Lambda function every 10 seconds**
+**5. Set up a CloudWatch rule to trigger the Lambda function every 1 minute**
 
 1. Creare the rule and save the Arn (it should be something like <code>arn:aws:events:us-east-2:000000000000:rule/updateUser</code>)
 ```bash
-aws events put-rule --name updateUser --schedule-expression 'rate(10 seconds)' --endpoint-url=http://localhost:4566
+aws events put-rule --name updateUser --schedule-expression 'rate(1 minutes)' --endpoint-url=http://localhost:4566
 ```
 
 2. Check that the rule has been correctly created with the frequency wanted
@@ -171,7 +171,7 @@ aws lambda add-permission --function-name updateUserFunc --statement-id updateUs
 aws events put-targets --rule updateUser --targets file://settings/targets.json --endpoint-url=http://localhost:4566
 ```
 
-Now every 10 seconds the function *updateUserFunc* will be triggered.
+Now every 1 minute the function *updateUserFunc* will be triggered.
 
 **6. Set up the Lambda function triggered by SQS messages that notifies errors in IoT devices via email**
 
@@ -227,7 +227,7 @@ python3 IoTdevices.py
 2. Wait that the Lambda function *updateUserFunc* compute the data (wait 10 seconds) or invoke it manually
 
 3. Run flask with the command:
-```sh
+```bash
 export FLASK_APP=./main.py; flask run
 ```
 
