@@ -48,7 +48,7 @@ client = boto3.client('sqs', endpoint_url='http://localhost:4566')
 
 if __name__ == '__main__':
     # Creation for queues
-    machines = ["Cyclette", "Tapis roulant", "Elliptical bike", "Spin bike"]
+    machines = ["Cyclette", "Tapis_roulant", "Elliptical_bike", "Spin_bike"]
     # for machine in machines:
     #     response = client.create_queue( # Creo Queue per ogni macchina della gym
     #         QueueName = machine
