@@ -2,10 +2,7 @@ from datetime import datetime
 
 import boto3
 from botocore.exceptions import ClientError
-from flask import Blueprint, render_template, request, flash, jsonify, session, url_for
-from flask_login import login_required, current_user
-import json
-
+from flask import Blueprint, render_template, flash, jsonify, session, url_for
 from werkzeug.utils import redirect
 
 from models.Utils import Utils

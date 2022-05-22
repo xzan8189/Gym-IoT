@@ -3,7 +3,6 @@ from datetime import datetime
 import boto3
 from botocore.exceptions import ClientError
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
-from flask_login import login_user, current_user
 from werkzeug.exceptions import BadRequestKeyError
 
 from models.User import User
