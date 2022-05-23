@@ -137,6 +137,8 @@ aws lambda delete-function --function-name updateUserFunc --endpoint-url=http://
 
 5. Test the function:
 
+	* create an user in the **sign-up page** with *username="prova"*
+
 	* simulate the messages sent by some IoT devices
 	```bash
 	python3 IotDevices.py
@@ -147,7 +149,9 @@ aws lambda delete-function --function-name updateUserFunc --endpoint-url=http://
 	aws lambda invoke --function-name updateUserFunc out --endpoint-url=http://localhost:4566
 	```
 
-	* check within the table that items are changed
+	* check within the table that the item with *username="prova"* is changed
+
+6. From here you can jump directly to the [Use it](#use-it) step and run the website to check the changes of the user, logging with his credentials.
 
 **5. Set up a CloudWatch rule to trigger the Lambda function every 1 minute**
 
