@@ -144,7 +144,7 @@ aws lambda delete-function --function-name updateUserFunc --endpoint-url=http://
 
 	* manually invoke the function (it may take some times)
 	```bash
-	aws lambda invoke --function-name updateUserFunc --payload fileb://settings/userdata.json out --endpoint-url=http://localhost:4566
+	aws lambda invoke --function-name updateUserFunc out --endpoint-url=http://localhost:4566
 	```
 
 	* check within the table that items are changed
@@ -220,13 +220,15 @@ aws sqs send-message --queue-url http://localhost:4566/000000000000/Errors --mes
 
 ### Use it
 1. Simulate the IoT devices
-```sh
+```bash
 python3 IoTdevices.py
 ```
 
-2. Wait that the Lambda function *updateUserFunc* compute the data (wait 10 seconds) or invoke it manually
+2. Wait that the Lambda function *updateUserFunc* compute the data (wait 1 minute) or invoke it manually
 
-3. Run flask with the command:
+3. Modify the variable `SECRET_KEY` within the `config.py` with a random string.
+
+4. Run flask with the command:
 ```bash
 export FLASK_APP=./main.py; flask run
 ```
