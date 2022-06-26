@@ -25,7 +25,7 @@
 
 </head>
 
-<body id="page-top" onload="myAreaChart( {{ user['gym'] }} );myBarChart( {{ user['gym']['machines'] }} );myPieChart( {{ user['gym']['data'] }} )">
+<body id="page-top" onload="eventUpdateUser();myAreaChart( {{ user['gym'] }} );myBarChart( {{ user['gym']['machines'] }} );myPieChart( {{ user['gym']['data'] }} )">
 
 <!-- Page Wrapper -->
 <div id="wrapper">
@@ -467,6 +467,10 @@
 <script
         type="text/javascript"
         src="{{ url_for('static', filename='scripts/js/demo/chart-bar-demo.js') }}"
+></script>
+<script
+        type="text/javascript"
+        src="{{ url_for('static', filename='scripts/js/myScripts/myScript.js') }}"
 ></script>
 </body>
 </html>

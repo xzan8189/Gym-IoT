@@ -1,14 +1,17 @@
 import genericpath
+import json
 from os import path
 
-from flask import Flask, render_template
+import flask
+from flask import Flask, render_template, Response, request
 
 from settings.config import DefaultConfig
 
+app = Flask(__name__)
 CONFIG = DefaultConfig()
 
+
 def create_app():
-    app = Flask(__name__)
     app.register_error_handler(404, page_not_found)
     app.config['SECRET_KEY'] = CONFIG.SECRET_KEY
 
@@ -21,5 +24,8 @@ def create_app():
 
     return app
 
+
 def page_not_found(e):
     return render_template('404.html'), 404
+
+

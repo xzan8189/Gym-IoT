@@ -1,8 +1,12 @@
+import time
 from datetime import datetime
 
 import boto3
+import flask
 from botocore.exceptions import ClientError
-from flask import Blueprint, render_template, flash, jsonify, session, url_for
+from flask import Blueprint, render_template, flash, jsonify, session, url_for, request, Response, \
+    copy_current_request_context
+from flask_sse import sse
 from werkzeug.utils import redirect
 
 from models.Utils import Utils
@@ -38,6 +42,24 @@ def home():
 
     return render_template("home.html") #non verrà mai raggiunto, poiché tu accedi a questa pagina solo se sei loggato
 
-@views.route('/delete-note', methods=['POST'])
-def delete_note():
-    return jsonify({})
+flag = False
+data_json = "nothing"
+
+@views.route("/listen", methods=['GET', 'POST'])
+def listen():
+    global flag, data_json
+    if request.method == 'POST': # Receive data
+        flag = True
+        data_json = flask.request.json
+        print(data_json)
+
+    def respond_to_client(): # Send data to event
+        #time.sleep(1)
+        print("Invio..")
+        yield f"data: {data_json}\nevent: online\n\n"
+
+    if request.method == 'GET' and flag: # Send data
+        flag=False
+        return Response(respond_to_client(), mimetype='text/event-stream')
+
+    return Response(mimetype='text/event-stream') # There is nothing. I have to return something otherwise it will give an error the eventListener

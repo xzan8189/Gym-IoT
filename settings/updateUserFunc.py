@@ -7,7 +7,6 @@ from botocore.exceptions import ClientError
 def reset_donut_and_bar_chart(user):
     time_spent = user['gym']['machines']['time_spent']
     calories_spent = user['gym']['machines']['calories_spent']
-    calories_lost_today = user['gym']['data']['calories_lost_today']
 
     # reset time_spent
     for i in range(len(time_spent)):
@@ -38,7 +37,6 @@ def updateUser(user, msg_body, machine):
     b = datetime.datetime.strptime(user['last_time_user_was_updated'], date_format)
     delta = a - b
     if delta.days != 0:
-        print("reset")
         reset_donut_and_bar_chart(user=user)
         user['last_time_user_was_updated'] = datetime.datetime.today().strftime('%Y-%m-%d')
 
@@ -48,9 +46,9 @@ def updateUser(user, msg_body, machine):
     # then it will be changed everyday the value 'monthly_target_percentage' passed from view.home, but we don't want this.
     # We want that the 'weight' is going to be updated only at the end of the month
     now = datetime.datetime.now()
-    if int(user['gym']['calories'][str(now.year)][now.month-1]) == 0: # it's a new month
+    if int(user['gym']['calories'][str(now.year)][now.month-1]) == 0: # it's a new month, so i update the weight
         user['info']['weight'] = str(float(user['info']['weight']) - float(user['gym']['data']['calories_lost'])) # update weight
-        user['gym']['data']['calories_to_reach_today'] = str(calculate_calorie_deficit(user['info']['sex'], float(user['info']['weight']), float(user['info']['height']), int(user['info']['age']))) # update the "fabbisogno calorico"
+        user['gym']['data']['calories_to_reach_today'] = str(calculate_calorie_deficit(user['info']['sex'], float(user['info']['weight']), float(user['info']['height']), int(user['info']['age']))) # update the "calorie deficit"
 
     # update fields 'data'
     user['gym']['data']['calories_lost'] = str(int(user['gym']['data']['calories_lost']) + value_calories_spent)
