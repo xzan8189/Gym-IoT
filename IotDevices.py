@@ -47,7 +47,7 @@ def build_msgBody2(username: str) -> str:
 client = boto3.client('sqs', endpoint_url='http://localhost:4566')
 
 if __name__ == '__main__':
-    # Creation for queues
+    # Creating Queues
     machines = ["Cyclette", "Tapis_roulant", "Elliptical_bike", "Spin_bike"]
     for machine in machines:
         response = client.create_queue( # Creating Queue for each machine of gym
