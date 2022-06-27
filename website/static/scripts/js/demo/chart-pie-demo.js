@@ -5,14 +5,21 @@ Chart.defaults.global.defaultFontColor = '#858796';
 
 function myPieChart(gym) {
     // Pie Chart Example
-    console.log('calories_lost_today: ' + gym['calories_lost_today']);
-    console.log('calories_to_reach_today: ' + gym['calories_to_reach_today']);
+    //console.log('calories_lost_today: ' + gym['calories_lost_today']);
+    //console.log('calories_to_reach_today: ' + gym['calories_to_reach_today']);
     var calorie_mancanti_da_consumare = parseFloat(gym['calories_to_reach_today']) - parseFloat(gym['calories_lost_today'])
     if (calorie_mancanti_da_consumare<0) {
         calorie_mancanti_da_consumare = 0;
     }
-    console.log('Calorie mancanti: ' + calorie_mancanti_da_consumare);
+    //console.log('Calorie mancanti: ' + calorie_mancanti_da_consumare);
+
+    var divChartPie = document.getElementById("div-chart-pie-id");
     var ctx = document.getElementById("myPieChart");
+    divChartPie.removeChild(ctx);
+
+    ctx = document.createElement("CANVAS");
+    ctx.setAttribute('id', 'myPieChart');
+    divChartPie.appendChild(ctx);
 
     var myPieChart = new Chart(ctx, {
       type: 'doughnut',

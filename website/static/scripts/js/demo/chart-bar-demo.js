@@ -32,7 +32,14 @@ function myBarChart(gym) {
     /*console.log('name_machine: ' + gym['name_machine']);
     console.log('time_spent: ' + gym['time_spent']);
     console.log('calories_spent: ' + gym['calories_spent']);*/
+    var divChartBar = document.getElementById("div-chart-bar-id");
     var ctx = document.getElementById("myBarChart");
+    divChartBar.removeChild(ctx);
+
+    ctx = document.createElement("CANVAS");
+    ctx.setAttribute('id', 'myBarChart');
+    divChartBar.appendChild(ctx);
+
 
     var myBarChart = new Chart(ctx, {
       type: 'bar',

@@ -31,7 +31,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 function myAreaChart(gym) {
     // Area Chart Example
     //console.log('calories: ' + gym['calories']);
-    console.log(Object.keys(gym['calories']));
+    //console.log(Object.keys(gym['calories']));
     if (Object.keys(gym['calories']).length > 1) {
         console.log('ciao');
         var database = [{
@@ -72,8 +72,13 @@ function myAreaChart(gym) {
           data: gym['calories'][Object.keys(gym['calories'])[0]],
         }]
     }
+    var divChartArea = document.getElementById("div-chart-area-id");
     var ctx = document.getElementById("myAreaChart");
+    divChartArea.removeChild(ctx);
 
+    ctx = document.createElement("CANVAS");
+    ctx.setAttribute('id', 'myAreaChart');
+    divChartArea.appendChild(ctx);
 
     var myLineChart = new Chart(ctx, {
       type: 'line',

@@ -2,6 +2,7 @@ import datetime
 import json
 
 import boto3
+import requests
 from botocore.exceptions import ClientError
 
 def reset_donut_and_bar_chart(user):
@@ -101,6 +102,7 @@ def lambda_handler(event, context):
                         else: # Parameters are good, so I can proceed with the update of user
                             user = updateUser(user=user, msg_body=msg_body, machine=machine)
                             table.put_item(Item=user)
+                            requests.post('http://127.0.0.1:5000/listen',json={'username': user['username']})
                     else:
                         print('User "' + msg_body['username'] + '" not found!')
 

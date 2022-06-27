@@ -25,7 +25,7 @@
 
 </head>
 
-<body id="page-top" onload="eventUpdateUser();myAreaChart( {{ user['gym'] }} );myBarChart( {{ user['gym']['machines'] }} );myPieChart( {{ user['gym']['data'] }} )">
+<body id="page-top" onload="eventUpdateUser( '{{ user['username'] }}' );myAreaChart( {{ user['gym'] }} );myBarChart( {{ user['gym']['machines'] }} );myPieChart( {{ user['gym']['data'] }} )">
 
 <!-- Page Wrapper -->
 <div id="wrapper">
@@ -336,7 +336,7 @@
                                     Chart</h6>
                             </div>
                             <div class="card-body">
-                                <div class="chart-area">
+                                <div class="chart-area" id="div-chart-area-id">
                                     <canvas id="myAreaChart"></canvas>
                                 </div>
                                 <hr>
@@ -350,7 +350,7 @@
                                 <h6 class="m-0 font-weight-bold text-primary">Machines - Bar Chart</h6>
                             </div>
                             <div class="card-body">
-                                <div class="chart-bar">
+                                <div class="chart-bar" id="div-chart-bar-id">
                                     <canvas id="myBarChart"></canvas>
                                 </div>
                                 <hr>
@@ -370,7 +370,7 @@
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
-                                <div class="chart-pie pt-4">
+                                <div class="chart-pie pt-4" id="div-chart-pie-id">
                                     <canvas id="myPieChart"></canvas>
                                 </div>
                                 <hr>

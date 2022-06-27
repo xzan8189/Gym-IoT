@@ -47,12 +47,13 @@ def listen():
     if request.method == 'POST': # Receive data
         flag = True
         data_json = flask.request.json
-        print(data_json)
+        #print(data_json)
 
     def respond_to_client(): # Sending data to event
         #time.sleep(1)
-        print("Sending data to event..")
-        yield f"data: {data_json }\nevent: online\n\n"
+        #print("Sending data to event..")
+        user_found_dict = table.get_item(Key={'username': data_json['username']})
+        yield f"data: {user_found_dict['Item']}\nevent: {data_json['username']}\n\n"
 
     if request.method == 'GET' and flag: # Send data
         flag=False
