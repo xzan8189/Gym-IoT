@@ -20,10 +20,10 @@ table = dynamodb.Table('Users')
 @views.route('/')
 @views.route('/home', methods=['GET', 'POST'])
 def home():
-    if 'user_in_session' not in session:
+    if 'user_in_session' not in session: # No user in session, he tried to go in "home.html" without login before
         flash('You must log-in before!', category='error')
         return redirect(url_for('auth.login'))
-    else: # Serve per quando l'utente ricarica la pagina per vedere i grafici aggiornati (vengono ripresi i dati dell'utente dal database)
+    else: # User in session, so now he can go in "home.html"
         try:
             username = session['user_in_session']['username']
             user_found_dict = table.get_item(Key={'username': username})
@@ -39,12 +39,8 @@ def home():
         except ClientError as e:
             print(e.response['Error']['Message'])
 
-
-    return render_template("home.html") #non verrà mai raggiunto, poiché tu accedi a questa pagina solo se sei loggato
-
 flag = False
 data_json = "nothing"
-
 @views.route("/listen", methods=['GET', 'POST'])
 def listen():
     global flag, data_json
@@ -53,13 +49,13 @@ def listen():
         data_json = flask.request.json
         print(data_json)
 
-    def respond_to_client(): # Send data to event
+    def respond_to_client(): # Sending data to event
         #time.sleep(1)
-        print("Invio..")
-        yield f"data: {data_json}\nevent: online\n\n"
+        print("Sending data to event..")
+        yield f"data: {data_json }\nevent: online\n\n"
 
     if request.method == 'GET' and flag: # Send data
         flag=False
         return Response(respond_to_client(), mimetype='text/event-stream')
 
-    return Response(mimetype='text/event-stream') # There is nothing. I have to return something otherwise it will give an error the eventListener
+    return Response(mimetype='text/event-stream') # There is nothing. I have to return something otherwise it will give an error the eventListener in Javascript

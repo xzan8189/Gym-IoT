@@ -18,7 +18,7 @@ def create_app():
     # Import Blueprints
     from .views import views
     from .auth import auth
-    # Registrazione delle Blueprints
+    # Registration of blueprints
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
 

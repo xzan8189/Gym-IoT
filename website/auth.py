@@ -55,7 +55,7 @@ def logout():
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
-    if request.method == 'POST':
+    if request.method == 'POST': # Taking data from the form in "sign-up.html"
         username = request.form.get('username')
         name = request.form.get('name')
         surname = request.form.get('surname')
@@ -72,8 +72,7 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
-
-        #controlli
+        # Several controls before adding new user
         try:
             response = table.get_item(Key={'username': username})
             print(response)
@@ -101,7 +100,6 @@ def sign_up():
         elif len(password1) < 7:
             flash("Password must be at least 7 characters.", category='error')
         else:
-            #password = generate_password_hash(password1, method='sha256')
             new_user = User(
                 username=username,
                 name=name,
@@ -116,7 +114,7 @@ def sign_up():
                 calories_to_reach_today=str(Utils.calculate_calorie_deficit(sex, float(weight), float(height), int(age)))
             )
             new_user_dict = Utils.create_objectUser_to_dict(new_user)
-            print('Sto caricando il nuovo utente: \n' + str(new_user_dict))
+            print('Uploading new user in database: \n' + str(new_user_dict))
             table.put_item(Item=new_user_dict)
 
             session.clear()
