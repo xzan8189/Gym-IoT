@@ -5,7 +5,7 @@ import boto3
 
 def build_msgBody(username: str) -> str:
     value_time_spent = int(random.randint(0, 60)) # I use the machine max 60 min
-    #value_time_spent = "" # extract this line from the comment to send a message to 'Errors' queue
+    #value_time_spent = "" # extract this line (and put the line above between comments) from the comment to send a message to 'Errors' queue
     value_calories_spent = value_time_spent * 6 # I multiply with the number 6 to simulate the calories_spent on the machine
 
     print("Calories lost on machine: " + str(value_calories_spent))

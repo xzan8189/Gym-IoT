@@ -47,7 +47,6 @@ def listen():
     if request.method == 'POST': # Receive data
         flag = True
         data_json = flask.request.json
-        #print(data_json)
 
     def respond_to_client(): # Sending data to event
         #time.sleep(1)
