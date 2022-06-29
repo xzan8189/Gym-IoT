@@ -5,11 +5,9 @@ import boto3
 from botocore.exceptions import ClientError
 from models.User import User
 
-# Variabili d'istanza
 dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:4566")
 table = dynamodb.Table('Users')
 
-# Metodi della classe
 def load_users(users):
     for customer in users['Users']:
         #print(f"Adding user: \n{user}")
@@ -20,7 +18,7 @@ if __name__ == '__main__':
         user_list = json.load(json_file, parse_float=Decimal)
 
     load_users(user_list)
-    username = input("Scrivi l'username dell'utente da trovate nel DB: ")
+    username = input("Write the username of the customer to find: ")
 
     try:
         response = table.get_item(Key={'username': username})
@@ -40,7 +38,7 @@ if __name__ == '__main__':
             height=response['Item']['info']['height'],
             calories_to_reach_today=response['Item']['gym']['data']['calories_to_reach_today']
         )
-    #print(f"L'utente è stato trovato: ")
+    #print(f"User found: ")
     #print(str(response['Item']))
 
     # print("Info: " + str(response['Item']["info"]))

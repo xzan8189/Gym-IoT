@@ -1,0 +1,28 @@
+{
+  "Training_cards": [
+    {
+      "id": 1,
+      "difficulty": "Easy",
+      "content": {
+          "machines_to_use": ["Cyclette", "Lat_machine", "Elliptical_bike", "Shoulder_press"],
+          "calories_or_repetitions": ["180", 23, "140", 30]
+        }
+    },
+    {
+      "id": 2,
+      "difficulty": "Medium",
+      "content": {
+          "machines_to_use": ["Cyclette", "Pectoral_machine", "Elliptical_bike", "Spin_bike", "Chest Press"],
+          "calories_or_repetitions": ["140", 30, "180", "100", 30]
+        }
+    },
+    {
+      "id": 3,
+      "difficulty": "Hard",
+      "content": {
+          "machines_to_use": ["Cyclette", "Shoulder_press", "Leg_extension", "Chest Press", "Elliptical_bike", "Squat"],
+          "calories_or_repetitions": ["180", 40, 30, 40, "90", 30]
+        }
+    }
+  ]
+}

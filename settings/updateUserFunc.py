@@ -38,15 +38,6 @@ def updateUser(user, msg_body, machine):
         user['last_time_user_was_updated'] = datetime.datetime.today().strftime('%Y-%m-%d')
     print("Days: " + str(delta.days))
 
-    # I DON'T UPDATE FIELD '['info']['weight']' EVERYDAY: because if you update it everyday
-    # then it will be changed everyday the value 'monthly_target_percentage' passed from view.home, but we don't want this.
-    # We want that the 'weight' is going to be updated only at the end of the month
-    # --------------------------- DEVI RIMUOVERE QUESTO CODICE PERCHé NON è UTILE! -----------------
-    # now = datetime.datetime.now()
-    # if int(user['gym']['calories'][str(now.year)][now.month-1]) == 0: # it's a new month, so i update the weight
-    #     user['info']['weight'] = str(float(user['info']['weight']) - float(user['gym']['data']['calories_lost'])) # updating weight
-    #     user['gym']['data']['calories_to_reach_today'] = str(calculate_calorie_deficit(user['info']['sex'], float(user['info']['weight']), float(user['info']['height']), int(user['info']['age']))) # updating the "calorie deficit"
-
     # update fields 'data'
     user['gym']['data']['calories_lost'] = str(int(user['gym']['data']['calories_lost']) + value_calories_spent)
     user['gym']['data']['calories_lost_today'] = str(int(user['gym']['data']['calories_lost_today']) + value_calories_spent)

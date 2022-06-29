@@ -1,12 +1,9 @@
-import time
 from datetime import datetime
 
 import boto3
 import flask
 from botocore.exceptions import ClientError
-from flask import Blueprint, render_template, flash, jsonify, session, url_for, request, Response, \
-    copy_current_request_context
-from flask_sse import sse
+from flask import Blueprint, render_template, flash, session, url_for, request, Response
 from werkzeug.utils import redirect
 
 from models.Utils import Utils
@@ -49,8 +46,6 @@ def listen():
         data_json = flask.request.json
 
     def respond_to_client(): # Sending data to event
-        #time.sleep(1)
-        #print("Sending data to event..")
         user_found_dict = table.get_item(Key={'username': data_json['username']})
         yield f"data: {user_found_dict['Item']}\nevent: {data_json['username']}\n\n"
 
