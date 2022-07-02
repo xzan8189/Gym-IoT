@@ -14,7 +14,8 @@ auth = Blueprint('auth', __name__)
 
 # Variabili d'istanza
 dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:4566")
-table = dynamodb.Table('Users')
+table_users = dynamodb.Table('Users')
+table_training_cards = dynamodb.Table('Training_cards')
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -28,7 +29,7 @@ def login():
         print(f'Username: {username}, Password: {password}')
 
         try:
-            user_found_dict = table.get_item(Key={'username': username})
+            user_found_dict = table_users.get_item(Key={'username': username})
             if len(user_found_dict)>1:
                 if check_password_hash(user_found_dict['Item']['password'], password):
                     flash('Logged in successfully!', category='success')
@@ -74,7 +75,7 @@ def sign_up():
 
         # Several controls before adding new user
         try:
-            response = table.get_item(Key={'username': username})
+            response = table_users.get_item(Key={'username': username})
             print(response)
         except ClientError as e:
             print(e.response['Error']['Message'])
@@ -114,8 +115,9 @@ def sign_up():
                 calories_to_reach_today=str(Utils.calculate_calorie_deficit(sex, float(weight), float(height), int(age)))
             )
             new_user_dict = Utils.create_objectUser_to_dict(new_user)
-            print('Uploading new user in database: \n' + str(new_user_dict))
-            table.put_item(Item=new_user_dict)
+            #print('Uploading new user in database: \n' + str(new_user_dict))
+            table_users.put_item(Item=new_user_dict)
+            table_training_cards.put_item(Item=Utils.create_training_card(username))
 
             session.clear()
             session['user_in_session'] = new_user_dict

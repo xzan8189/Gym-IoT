@@ -53,7 +53,6 @@ def updateUser(user, msg_body, machine):
 
     return user
 
-
 def lambda_handler(event, context):
     client = boto3.client('sqs', endpoint_url='http://localhost:4566')
     dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:4566")
@@ -61,50 +60,57 @@ def lambda_handler(event, context):
 
     machines = ["Cyclette", "Tapis_roulant", "Elliptical_bike", "Spin_bike"]
 
-    #while True:
-    for machine in machines:
-        response = client.receive_message(
-            QueueUrl='http://localhost:4566/000000000000/' + machine
-        )
-        if 'Messages' in response:
-            for item in response['Messages']:
-                msg_body = json.loads(item['Body'])
-                print("Queue: " + machine + ",\nitem['Body']: " + str(msg_body))
+    while True:
+        for machine in machines:
+            response = client.receive_message(
+                QueueUrl='http://localhost:4566/000000000000/' + machine
+            )
+            if 'Messages' in response:
+                for item in response['Messages']:
+                    msg_body = json.loads(item['Body'])
+                    print("Queue: " + machine + ",\nitem['Body']: " + str(msg_body))
 
-                try:
-                    response = table.get_item(Key={'username': msg_body['username']}) # Getting user from database
-                    if 'Item' in response:
-                        user = response['Item']
-                        print(user)
+                    try:
+                        response = table.get_item(Key={'username': msg_body['username']}) # Getting user from database
+                        if 'Item' in response:
+                            user = response['Item']
+                            print(user)
 
-                        # Check parameter's message. If they are not correct I send an error message to Errors queue
-                        if ('username' not in msg_body or msg_body['username'] == "") or ('value_time_spent' not in msg_body or msg_body['value_time_spent'] == "") or ('value_calories_spent' not in msg_body or msg_body['value_calories_spent'] == ""):
-                            print("ERROR")
-                            username = "ERROR" if ('username' not in msg_body or msg_body['username'] == "") else msg_body['username']
-                            value_time_spent = "ERROR" if ('value_time_spent' not in msg_body or msg_body['value_time_spent'] == "") else msg_body['value_time_spent']
-                            value_calories_spent = "ERROR" if ('value_calories_spent' not in msg_body or msg_body['value_calories_spent'] == "") else msg_body['value_calories_spent']
+                            # Check parameter's message. If they are not correct I send an error message to Errors queue
+                            if ('username' not in msg_body or msg_body['username'] == "") or ('value_time_spent' not in msg_body or msg_body['value_time_spent'] == "") or ('value_calories_spent' not in msg_body or msg_body['value_calories_spent'] == ""):
+                                print("ERROR")
+                                username = "ERROR" if ('username' not in msg_body or msg_body['username'] == "") else msg_body['username']
+                                value_time_spent = "ERROR" if ('value_time_spent' not in msg_body or msg_body['value_time_spent'] == "") else msg_body['value_time_spent']
+                                value_calories_spent = "ERROR" if ('value_calories_spent' not in msg_body or msg_body['value_calories_spent'] == "") else msg_body['value_calories_spent']
 
-                            msg_error_body = '{"device_id": "' + str(machine) + '", "value_time_spent": "' + str(value_time_spent) + '", "value_calories_spent": "' + str(value_calories_spent)+ '"}'
-                            print("\n\nmsg_error_body: " + msg_error_body)
-                            response = client.send_message(
-                                QueueUrl='http://localhost:4566/000000000000/Errors',
-                                MessageBody=msg_error_body
-                            )
-                        else: # Parameters are good, so I can proceed with the update of user
-                            user = updateUser(user=user, msg_body=msg_body, machine=machine)
-                            table.put_item(Item=user)
-                            requests.post('http://127.0.0.1:5000/listen',json={'username': user['username']})
-                    else:
-                        print('User "' + msg_body['username'] + '" not found!')
+                                msg_error_body = '{"device_id": "' + str(machine) + '", "value_time_spent": "' + str(value_time_spent) + '", "value_calories_spent": "' + str(value_calories_spent)+ '"}'
+                                print("\n\nmsg_error_body: " + msg_error_body)
+                                response = client.send_message(
+                                    QueueUrl='http://localhost:4566/000000000000/Errors',
+                                    MessageBody=msg_error_body
+                                )
+                            else: # Parameters are good, so I can proceed with the update of user
+                                user = updateUser(user=user, msg_body=msg_body, machine=machine)
+                                table.put_item(Item=user)
 
-                except ClientError as e:
-                    print(e.response['Error']['Message'])
-                print()
+                                msg_body2 = '{"username": "' + user['username'] + '", "machine_or_exercise": "' + machine + '", "value_calories_spent": "' + msg_body['value_calories_spent'] + '"}'
+                                msg_body2 = msg_body2.replace("'", '"')
+                                client.send_message(  # Sending message to 'Training_card' queue
+                                    QueueUrl='http://localhost:4566/000000000000/Training_card',
+                                    MessageBody=msg_body2
+                                )
+                                requests.post('http://127.0.0.1:5000/listen',json={'username': user['username']}) # Updating website
+                        else:
+                            print('User "' + msg_body['username'] + '" not found!')
 
-                response = client.delete_message( # Delete message from queue
-                    QueueUrl='http://localhost:4566/000000000000/' + machine,
-                    ReceiptHandle=item['ReceiptHandle']
-                )
+                    except ClientError as e:
+                        print(e.response['Error']['Message'])
+                    print()
 
-# if __name__ == '__main__':
-#     lambda_handler(None, None)
+                    response = client.delete_message( # Delete message from queue
+                        QueueUrl='http://localhost:4566/000000000000/' + machine,
+                        ReceiptHandle=item['ReceiptHandle']
+                    )
+
+if __name__ == '__main__':
+    lambda_handler(None, None)

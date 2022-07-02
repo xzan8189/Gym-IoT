@@ -21,7 +21,7 @@ if __name__ == '__main__':
     id = input("Write the id of tranining card to find: ")
 
     try:
-        response = table.get_item(Key={'id': int(id)})
+        response = table.get_item(Key={'id': str(id)})
     except ClientError as e:
         print(e.response['Error']['Message'])
 

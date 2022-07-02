@@ -24,6 +24,9 @@ if __name__ == '__main__':
         response = client.create_queue( # Creating Queue for each machine of gym
             QueueName = machine
         )
+    response = client.create_queue( # Creating Training_card Queue
+        QueueName="Training_card"
+    )
     response = client.create_queue( # Creating Error Queue
         QueueName="Errors"
     )
@@ -32,7 +35,7 @@ if __name__ == '__main__':
     print('QueueUrls: \n' + str(response["QueueUrls"]) + '\n')
 
     # Creating message to send to Queue
-    username = "prova"
+    username = "xzan8189"
     msg_body = build_msgBody(username=username)
 
     randomQueue = machines[random.randint(0, 3)]
@@ -48,4 +51,7 @@ if __name__ == '__main__':
     #     )
     # client.delete_queue(
     #     QueueUrl='http://localhost:4566/000000000000/Errors'
+    # )
+    # client.delete_queue(
+    #     QueueUrl='http://localhost:4566/000000000000/Training_card'
     # )

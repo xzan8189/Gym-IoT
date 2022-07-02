@@ -26,9 +26,10 @@ def home():
             username = session['user_in_session']['username']
             user_found_dict = table_users.get_item(Key={'username': username})
             if len(user_found_dict) > 1:
-                training_card_found_dict = table_training_cards.get_item(Key={'id': user_found_dict['Item']['training_card_info']['training_card_id']})
+                #print(username)
+                training_card_found_dict = table_training_cards.get_item(Key={'id': username})
                 if len(training_card_found_dict) > 1:
-                    print(training_card_found_dict['Item'])
+                    #print(training_card_found_dict['Item'])
                     session['user_in_session'] = user_found_dict['Item']
                     session['training_card_in_session'] = training_card_found_dict['Item']
 
@@ -52,9 +53,9 @@ def training_card():
             username = session['user_in_session']['username']
             user_found_dict = table_users.get_item(Key={'username': username})
             if len(user_found_dict) > 1:
-                training_card_found_dict = table_training_cards.get_item(Key={'id': user_found_dict['Item']['training_card_info']['training_card_id']})
+                training_card_found_dict = table_training_cards.get_item(Key={'id': username})
                 if len(training_card_found_dict) > 1:
-                    print(training_card_found_dict['Item'])
+                    #print(training_card_found_dict['Item'])
                     session['user_in_session'] = user_found_dict['Item']
                     session['training_card_in_session'] = training_card_found_dict['Item']
 
@@ -81,6 +82,25 @@ def listen():
 
     if request.method == 'GET' and flag: # Send data
         flag=False
+        return Response(respond_to_client(), mimetype='text/event-stream')
+
+    return Response(mimetype='text/event-stream') # There is nothing. I have to return something otherwise it will give an error the eventListener in Javascript
+
+flag2 = False
+data_json2 = "nothing"
+@views.route("/listenTrainingCard", methods=['GET', 'POST'])
+def listenTrainingCard():
+    global flag2, data_json2
+    if request.method == 'POST': # Receive data
+        flag2 = True
+        data_json2 = flask.request.json
+
+    def respond_to_client(): # Sending data to event
+        #trainingCard_found_dict = table_training_cards.get_item(Key={'id': data_json2['username']})
+        yield f"data: {data_json2}\nevent: {data_json2['username']}TrainingCard\n\n"
+
+    if request.method == 'GET' and flag2: # Send data
+        flag2=False
         return Response(respond_to_client(), mimetype='text/event-stream')
 
     return Response(mimetype='text/event-stream') # There is nothing. I have to return something otherwise it will give an error the eventListener in Javascript

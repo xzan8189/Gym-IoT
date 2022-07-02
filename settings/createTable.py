@@ -33,7 +33,7 @@ dynamobdb.create_table( # Creating table 'Training_cards'
     AttributeDefinitions=[
         {
             'AttributeName': 'id',
-            'AttributeType': 'N'
+            'AttributeType': 'S'
         }
     ],
     ProvisionedThroughput={

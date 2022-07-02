@@ -1,29 +1,27 @@
 from models.User import User
 import datetime
 
+
 class Utils:
 
-    # Per lo User
-
-    # Kcal che deve perdere il cliente giornalmente
     @staticmethod
     def calculate_calorie_deficit(sex: str, weight: float, height: float, age: int) -> float:
         # Mifflin-St. Jeor equation
-        if (sex == 'F'): # for Females
+        if (sex == 'F'):    # for Females
             return (10 * weight) + (6.25 * height) - (5 * age) - 161
-        elif (sex == 'M'): # for Fales
+        elif (sex == 'M'):  # for Males
             return (10 * weight) + (6.25 * height) - (5 * age) + 5
 
     @staticmethod
     def calculate_monthly_target_percentage(user: dict) -> int:
-        workouts_per_week = 3 # quante volte va in palestra, ma negli sviluppi futuri si potrebbe modificare questo parametro a piacimento
-        number_of_weeks = 4  # sarebbero le settimane del mese
+        workouts_per_week = 3  # how many times the customer goes in gym
+        number_of_weeks = 4
 
         calories_lost = float(user['gym']['data']['calories_lost'])
         calories_to_reach_monthly = float(user['gym']['data']['calories_to_reach_today']) * (
-                    workouts_per_week * number_of_weeks)
+                workouts_per_week * number_of_weeks)
 
-        print(f'calculate_monthly_target_percentage: {calories_lost} * 100 / {calories_to_reach_monthly} = {int(calories_lost * 100 / calories_to_reach_monthly)}%')
+        #print(f'calculate_monthly_target_percentage: {calories_lost} * 100 / {calories_to_reach_monthly} = {int(calories_lost * 100 / calories_to_reach_monthly)}%')
         return int(calories_lost * 100 / calories_to_reach_monthly)
 
     @staticmethod
@@ -64,6 +62,9 @@ class Utils:
             'password': obj_user.getPassword(),
             'registration_date': obj_user.getRegistration_date(),
             'last_time_user_was_updated': obj_user.getLast_time_user_was_updated(),
+            'training_card_info': {
+                "current_machine_using": "Cyclette"
+            },
             'info': {
                 "sex": obj_user.getSex(),
                 "age": obj_user.getAge(),
@@ -88,3 +89,16 @@ class Utils:
         }
 
         return new_customer
+
+    @staticmethod
+    def create_training_card(username: str) -> dict:
+        training_card = {
+            "id": username,
+            "difficulty": "Medium",
+            "content": {
+                "machines_to_use": ["Cyclette", "Pectoral_machine", "Elliptical_bike", "Spin_bike", "Chest_Press"],
+                "calories_or_repetitions": ["140", 30, "180", "100", 30]
+            }
+        }
+
+        return training_card
