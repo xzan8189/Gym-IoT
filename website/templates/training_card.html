@@ -165,7 +165,7 @@
                                     </tr>
 
                                     {% set count = namespace(value=0) %}
-                                    {% for field in training_card['content']['machines_to_use'] %}
+                                    {% for field in training_card['content']['schedule'] %}
                                     <tr>
                                         <td>{{ field | replace("_", " ")}}</td>
                                         {% if training_card['content']['calories_or_repetitions'][count.value] is string %}

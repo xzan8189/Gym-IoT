@@ -96,7 +96,7 @@ class Utils:
             "id": username,
             "difficulty": "Medium",
             "content": {
-                "machines_to_use": ["Cyclette", "Pectoral_machine", "Elliptical_bike", "Spin_bike", "Chest_Press"],
+                "schedule": ["Cyclette", "Pectoral_machine", "Elliptical_bike", "Spin_bike", "Chest_Press"],
                 "calories_or_repetitions": ["140", 30, "180", "100", 30]
             }
         }
