@@ -1,16 +1,19 @@
-import boto3
 import json
+
+import boto3
 import requests
+
 from settings.config import DefaultConfig
 
 CONFIG = DefaultConfig()
 
-def machines_and_exercises_left(training_card_updated, machine_or_exercise_done):
+def machines_and_exercises_left(training_card_updated, machine_or_exercise_done, user):
     username = training_card_updated['id']
     schedule = training_card_updated['content']['schedule']
     calories_or_repetitions = training_card_updated['content']['calories_or_repetitions']
-    msg_machines_and_exercises_left = f"{username}, la volevamo informare che non sta seguendo correttamente la scheda di allenamento!\n\n*🚴‍♂️Gli esercizi da fare sono questi: *\n"
-
+    msg_machines_and_exercises_left = f"🚨 Hi {username}, We wanted to inform you that you are not following the training schedule correctly!\n\n" \
+                                      f"⚠ You are currently using this machine: *{str(machine_or_exercise_done).replace('_', ' ')}*\n\n" \
+                                      f"*But you have some exercise to finish yet ⤵️*\n"
 
     i = 0
     flag = 0
@@ -19,12 +22,18 @@ def machines_and_exercises_left(training_card_updated, machine_or_exercise_done)
             break
         elif int(item) > 0:
             flag = 1
-            msg_machines_and_exercises_left += str(schedule[i]).replace("_", " ") + "\n"
+            msg_machines_and_exercises_left += str(schedule[i]).replace("_", " ") + ": _"
+            if type(calories_or_repetitions[i]) is str:
+                msg_machines_and_exercises_left += str(calories_or_repetitions[i]) + " Cal_\n"
+            else:
+                msg_machines_and_exercises_left += str(calories_or_repetitions[i]) + " Rep_\n"
         i = i+1
 
-    if flag == 1: # Sending message
-        print(f"Message: {msg_machines_and_exercises_left}\nSending message...")
-        requests.get('https://api.telegram.org/bot' + CONFIG.BOT_TOKEN + '/sendMessage?chat_id=' + CONFIG.BOT_CHAT_ID + '&parse_mode=Markdown&text=' + msg_machines_and_exercises_left)
+    if flag == 1 and user['telegram_chat_id'] != "": # Sending message
+        print(f"Message: {msg_machines_and_exercises_left}\nSending message...\n")
+        requests.get('https://api.telegram.org/bot' + CONFIG.BOT_TOKEN + '/sendMessage?chat_id=' + user['telegram_chat_id'] + '&parse_mode=Markdown&text=' + msg_machines_and_exercises_left)
+    else:
+        print(f"The customer doesn't have Telegram\n")
 
 def updateTrainingCardUser(training_card, msg_body):
     username = msg_body['username']
@@ -40,26 +49,25 @@ def updateTrainingCardUser(training_card, msg_body):
     value = int(training_card['content']['calories_or_repetitions'][index_machine]) - value_calories_spent
     print(str(training_card['content']['calories_or_repetitions'][index_machine]) + " - " + str(value_calories_spent) + " = " + str(value))
     if type(training_card['content']['calories_or_repetitions'][index_machine]) is str: # Check if it is a string. CALORIES.
-        print("it's a STRING")
         if (value < 0):
             training_card['content']['calories_or_repetitions'][index_machine] = "0"
         else:
             training_card['content']['calories_or_repetitions'][index_machine] = str(int(training_card['content']['calories_or_repetitions'][index_machine]) - value_calories_spent)
 
     else: # It is not a string, so it's an int. REPETITIONS.
-        print("it's a INT")
         if (value < 0):
             training_card['content']['calories_or_repetitions'][index_machine] = 0
         else:
             training_card['content']['calories_or_repetitions'][index_machine] = int(training_card['content']['calories_or_repetitions'][index_machine]) - value_calories_spent
 
-    print(str(training_card) + "\n")
+    print(str(training_card))
     return training_card
 
 def lambda_handler(event, context):
     client = boto3.client('sqs', endpoint_url='http://localhost:4566')
     dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:4566")
-    table = dynamodb.Table('Training_cards')
+    table_users = dynamodb.Table('Users')
+    table_training_cards = dynamodb.Table('Training_cards')
 
     while True:
         response = client.receive_message(
@@ -70,7 +78,7 @@ def lambda_handler(event, context):
                 msg_body = json.loads(attribute['Body'])
                 print("Item['Body']: " + str(msg_body))
 
-                response = table.get_item(Key={'id': msg_body['username']})  # Getting training card of user from database
+                response = table_training_cards.get_item(Key={'id': msg_body['username']})  # Getting training card of user from database
                 if 'Item' in response:
                     training_card = response['Item']
                     training_card_updated = updateTrainingCardUser(training_card, msg_body)
@@ -81,19 +89,21 @@ def lambda_handler(event, context):
                     if training_card_updated == False:
                         break
 
-                    table.put_item(Item=training_card_updated)
+                    table_training_cards.put_item(Item=training_card_updated)
 
                     index_machine = list(training_card_updated['content']['schedule']).index(msg_body['machine_or_exercise'])
-                    calories_or_repetitions_spent = training_card_updated['content']['calories_or_repetitions'][index_machine]
-                    if type(calories_or_repetitions_spent) is str:
-                        calories_or_repetitions_spent = str(calories_or_repetitions_spent)
+                    calories_updated = training_card_updated['content']['calories_or_repetitions'][index_machine]
+                    if type(calories_updated) is str:
+                        calories_updated = str(calories_updated)
                     requests.post('http://127.0.0.1:5000/listenTrainingCard', # Updating website
                                   json={
                                       'username': msg_body['username'],
                                       'machine_or_exercise': msg_body['machine_or_exercise'],
-                                      'calories_or_repetitions_spent': calories_or_repetitions_spent
+                                      'calories_updated': calories_updated,
+                                      'value_calories_spent': msg_body['value_calories_spent']
                                   })
-                    machines_and_exercises_left(training_card_updated, msg_body['machine_or_exercise']) # Notify via Telegram if the customer is not performing the correct execution of the training card
+                    user = table_users.get_item(Key={'username': msg_body['username']})
+                    machines_and_exercises_left(training_card_updated, msg_body['machine_or_exercise'], user['Item']) # Notify via Telegram if the customer is not performing the correct execution of the training card
 
 if __name__ == '__main__':
     lambda_handler(None, None)

@@ -7,9 +7,7 @@
       "password": "sha256$2iYsmyMuTrBHhYQ5$7bf0a0192abd6028c0deec9d71663583d31a60dfba28d3b0e5f2de332fe669e3",
       "registration_date": "2022-05-09",
       "last_time_user_was_updated": "2022-05-16",
-      "training_card_info": {
-        "current_machine_using": "Cyclette"
-      },
+      "telegram_chat_id": "",
       "info": {
         "sex": "M",
         "age": "23",
@@ -40,9 +38,7 @@
       "password": "sha256$2iYsmyMuTrBHhYQ5$7bf0a0192abd6028c0deec9d71663583d31a60dfba28d3b0e5f2de332fe669e3",
       "registration_date": "2022-05-09",
       "last_time_user_was_updated": "2022-05-16",
-      "training_card_info": {
-        "current_machine_using": "Cyclette"
-      },
+      "telegram_chat_id": "",
       "info": {
         "sex": "M",
         "age": "21",

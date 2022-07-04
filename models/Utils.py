@@ -62,9 +62,7 @@ class Utils:
             'password': obj_user.getPassword(),
             'registration_date': obj_user.getRegistration_date(),
             'last_time_user_was_updated': obj_user.getLast_time_user_was_updated(),
-            'training_card_info': {
-                "current_machine_using": "Cyclette"
-            },
+            "telegram_chat_id": "",
             'info': {
                 "sex": obj_user.getSex(),
                 "age": obj_user.getAge(),

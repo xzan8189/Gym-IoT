@@ -28,12 +28,18 @@ function eventUpdateTrainingCard(username) {
 
         machine_or_exercise = data['machine_or_exercise'];
         console.log("Prima valeva: " + document.getElementById(machine_or_exercise).textContent);
+        alert_success = document.getElementById('alert-success');
+        alert_success_msg = document.getElementById('alert-success-msg');
         if (document.getElementById(machine_or_exercise + "_notification").textContent == " X ") {
             console.log("It's a STRING");
-            document.getElementById(machine_or_exercise).innerHTML = data['calories_or_repetitions_spent'] + " Cal";
+            document.getElementById(machine_or_exercise).innerHTML = data['calories_updated'] + " Cal";
+            alert_success.innerHTML = "You just consumed about <b>" + data['value_calories_spent'] + " Cal</b> on " + machine_or_exercise.replaceAll('_', " ") + "!";
         } else {
             console.log("It's an INT");
-            document.getElementById(machine_or_exercise).innerHTML = data['calories_or_repetitions_spent'] + " Rep";
+            document.getElementById(machine_or_exercise).innerHTML = data['calories_updated'] + " Rep";
+            alert_success.innerHTML = "You just did <b>" + data['value_calories_spent'] + " Rep</b> on " + machine_or_exercise.replaceAll('_', " ") + "!";
         }
+
+        alert_success.classList.add('show');
     }, true)
 }

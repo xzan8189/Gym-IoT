@@ -10,7 +10,7 @@ from models.Utils import Utils
 
 views = Blueprint('views', __name__)
 
-# Variabili d'istanza
+# Instance variables
 dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:4566")
 table_users = dynamodb.Table('Users')
 table_training_cards = dynamodb.Table('Training_cards')
@@ -97,7 +97,11 @@ def listenTrainingCard():
 
     def respond_to_client(): # Sending data to event
         #trainingCard_found_dict = table_training_cards.get_item(Key={'id': data_json2['username']})
-        yield f"data: {data_json2}\nevent: {data_json2['username']}TrainingCard\n\n"
+        user_found_dict = table_users.get_item(Key={'username': data_json2['username']})
+        user_found_dict = user_found_dict['Item']
+        index_machine = list(user_found_dict['gym']['machines']['name_machine']).index(data_json2['machine_or_exercise'])
+        total_calories_spent_on_machine = user_found_dict['gym']['machines']['calories_spent'][index_machine]
+        yield f"data: {data_json2}\ntotal_calories_spent_on_machine: {total_calories_spent_on_machine}\nevent: {data_json2['username']}TrainingCard\n\n"
 
     if request.method == 'GET' and flag2: # Send data
         flag2=False
