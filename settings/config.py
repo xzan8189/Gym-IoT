@@ -11,4 +11,3 @@ class DefaultConfig:
 
     #Telegram bot
     BOT_TOKEN = os.environ.get("Bot_token", "")
-    BOT_CHAT_ID = os.environ.get("Bot_chat_id", "")

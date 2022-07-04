@@ -18,7 +18,8 @@ if __name__ == '__main__':
         user_list = json.load(json_file, parse_float=Decimal)
 
     load_users(user_list)
-    username = input("Write the username of the customer to find: ")
+    #username = input("Write the username of the customer to find: ")
+    username = "xzan8189"
 
     try:
         response = table.get_item(Key={'username': username})
@@ -38,13 +39,6 @@ if __name__ == '__main__':
             height=response['Item']['info']['height'],
             calories_to_reach_today=response['Item']['gym']['data']['calories_to_reach_today']
         )
-    #print(f"User found: ")
-    #print(str(response['Item']))
-
-    # print("Info: " + str(response['Item']["info"]))
-    # print("Calories: " + str(response['Item']["gym"]["calories"]))
-    # print("Machines: " + str(response['Item']["gym"]["machines"]))
-    # print("Data: " + str(response['Item']["gym"]["data"]))
 
     for item in response['Item']['gym']['calories'].items():
         print(item[0] + ": " + str(item[1]))
