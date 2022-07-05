@@ -67,6 +67,27 @@ def training_card():
         except ClientError as e:
             print(e.response['Error']['Message'])
 
+@views.route('/insert_repetitions', methods=['GET', 'POST'])
+def insert_repetitions():
+    name_exercise = request.form.get('name_exercise')
+    num_repetitions = int(request.form.get('num_repetitions'))
+
+    username = session['user_in_session']['username']
+    training_card_found_dict = table_training_cards.get_item(Key={'id': username})
+    if len(training_card_found_dict) > 1:
+        training_card_found_dict = training_card_found_dict['Item']
+        index_exercise = list(training_card_found_dict['content']['schedule']).index(name_exercise)
+        current_repetitions = training_card_found_dict['content']['calories_or_repetitions'][index_exercise]
+        current_repetitions = int(current_repetitions) - num_repetitions
+        if current_repetitions < 0:
+            current_repetitions = 0
+
+        training_card_found_dict['content']['calories_or_repetitions'][index_exercise] = current_repetitions
+        table_training_cards.put_item(Item=training_card_found_dict) # Updating training_card
+        print(f"Updated {name_exercise}, you did about {num_repetitions} Rep")
+
+    return redirect(url_for('views.training_card'))
+
 flag = False
 data_json = "nothing"
 @views.route("/listen", methods=['GET', 'POST'])

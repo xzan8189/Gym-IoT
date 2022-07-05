@@ -159,19 +159,19 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <th>Difficulty</th>
-                                        <td>{{ training_card['difficulty'] }}</td>
+                                        <th style="vertical-align: middle;">Difficulty</th>
+                                        <td style="vertical-align: middle;">{{ training_card['difficulty'] }}</td>
                                     </tr>
                                     <tr>
-                                        <th >Machines & Exercises</th>
-                                        <th >Calories or Repetitions</th>
-                                        <th >Notification</th>
+                                        <th style="vertical-align: middle;">Machines & Exercises</th>
+                                        <th style="vertical-align: middle;">Calories or Repetitions</th>
+                                        <th style="vertical-align: middle;">Notification</th>
                                     </tr>
 
                                     {% set count = namespace(value=0) %}
                                     {% for field in training_card['content']['schedule'] %}
                                     <tr>
-                                        <td>{{ field | replace("_", " ")}}</td>
+                                        <td class="align-middle">{{ field | replace("_", " ")}}</td>
                                         {% if training_card['content']['calories_or_repetitions'][count.value] is string %}
                                                 <!--suppress XmlDuplicatedId -->
                                             <td id="{{ field }}">{{ training_card['content']['calories_or_repetitions'][count.value] }} Cal</td>
@@ -179,9 +179,15 @@
                                             <td id="{{ field }}_notification"> X </td>
                                         {% else %}
                                                 <!--suppress XmlDuplicatedId -->
-                                            <td id="{{ field }}">{{ training_card['content']['calories_or_repetitions'][count.value] }} Rep</td>
+                                            <td id="{{ field }}" class="align-middle">{{ training_card['content']['calories_or_repetitions'][count.value] }} Rep</td>
                                                 <!--suppress XmlDuplicatedId -->
-                                            <td id="{{ field }}_notification"> No </td>
+                                            <td id="{{ field }}_notification" align="center">
+                                                <form class="user" action="/insert_repetitions" method="POST">
+                                                    <input type="number" class="form-control" style="margin-bottom: -8px;margin-top: -8px;margin-left: -10rem;margin-right: -10rem;text-align: center;width: 30%;"
+                                                           id="num_repetitions" name="num_repetitions" placeholder="..." min="1" required/>
+                                                    <input type="hidden" id="name_exercise" name="name_exercise" value="{{ field }}"/>
+                                                </form>
+                                            </td>
                                         {% endif %}
                                     </tr>
                                     {% set count.value = count.value + 1 %}

@@ -14,11 +14,12 @@ def load_training_cards(training_cards):
         table.put_item(Item=training_card)
 
 if __name__ == '__main__':
-    with open("trainingCardData.json") as json_file:
+    with open("settings/trainingCardData.json") as json_file:
         training_cards_list = json.load(json_file, parse_float=Decimal)
 
     load_training_cards(training_cards_list)
-    id = input("Write the id of tranining card to find: ")
+    #id = input("Write the id of tranining card to find: ")
+    id ="xzan8189"
 
     try:
         response = table.get_item(Key={'id': str(id)})
