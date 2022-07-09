@@ -6,6 +6,8 @@ function eventUpdateUser(username) {
     eventSource.addEventListener(username, function(e) {
         var data = e.data;
         data = data.replaceAll("\'", '\"');
+        data = data.replaceAll("Decimal(", '');
+        data = data.replaceAll(")", '');
         //console.log(data);
         data = JSON.parse(data);
         console.log("Event arrived! Username (it is also the Id of the event) is: " + data["username"]);
