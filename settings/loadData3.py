@@ -14,7 +14,7 @@ def load_gym_rooms(gym_rooms):
         table.put_item(Item=gym_room)
 
 if __name__ == '__main__':
-    with open("gymRoomData.json") as json_file:
+    with open("settings/gymRoomData.json") as json_file:
         gym_rooms_list = json.load(json_file, parse_float=Decimal)
 
     load_gym_rooms(gym_rooms_list)
