@@ -8,6 +8,7 @@
       "registration_date": "2022-05-09",
       "last_time_user_was_updated": "2022-05-16",
       "telegram_chat_id": "",
+      "gym_room": 1,
       "info": {
         "sex": "M",
         "age": "23",
@@ -39,6 +40,7 @@
       "registration_date": "2022-05-09",
       "last_time_user_was_updated": "2022-05-16",
       "telegram_chat_id": "",
+      "gym_room": 2,
       "info": {
         "sex": "M",
         "age": "21",

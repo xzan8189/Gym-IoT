@@ -1,0 +1,22 @@
+{
+  "Gym_rooms": [
+    {
+      "id": 1,
+      "name_room": "room_1",
+      "temperature": 28,
+      "air_conditioner": false
+    },
+    {
+      "id": 2,
+      "name_room": "room_2",
+      "temperature": 28,
+      "air_conditioner": false
+    },
+    {
+      "id": 3,
+      "name_room": "room_3",
+      "temperature": 28,
+      "air_conditioner": false
+    }
+  ]
+}

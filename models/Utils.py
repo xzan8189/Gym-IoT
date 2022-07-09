@@ -63,6 +63,7 @@ class Utils:
             'registration_date': obj_user.getRegistration_date(),
             'last_time_user_was_updated': obj_user.getLast_time_user_was_updated(),
             "telegram_chat_id": "",
+            'gym_room': "",
             'info': {
                 "sex": obj_user.getSex(),
                 "age": obj_user.getAge(),

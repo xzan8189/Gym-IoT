@@ -25,7 +25,7 @@ def start(update: Update, context: CallbackContext):
 	try:
 		user_found_dict = table_users.get_item(Key={'username': user.username.lower()})
 		if len(user_found_dict) > 1:
-			print("Found!")
+			print("User found!")
 			update.message.reply_text("*Found!*", parse_mode='Markdown')
 			user_found_dict = user_found_dict['Item']
 
@@ -37,8 +37,9 @@ def start(update: Update, context: CallbackContext):
 							  f"Please write /help to see the commands available.", parse_mode='Markdown')
 			else:
 				update.message.reply_text(f"You are already registered {user.username}! Try to not use this command, it is stressful for me 😮‍💨")
-		else:
-			print("Not found")
+		else: # User not found in DB
+			print("User not found")
+			update.message.reply_text(f"☹ You are NOT registered on the web site {user.username}! Try to use this command instead /gym_iot_registration to register your new account 🦾")
 
 	except ClientError as e:
 		print(e.response['Error']['Message'])
@@ -49,11 +50,16 @@ def start(update: Update, context: CallbackContext):
 
 def help(update: Update, context: CallbackContext):
 	update.message.reply_text("""Available Commands :
-	/gym_iot - To get the Web site URL""")
+	/gym_iot - To login on the Website
+	/gym_iot_registration - Sign-up on the Website!""")
 
 def gym_iot_url(update: Update, context: CallbackContext):
-	update.message.reply_text("Web site Link =>\
+	update.message.reply_text("Website Login Link =>\
 	[Gym_IoT Login](http://127.0.0.1:5000/login)", parse_mode='Markdown')
+
+def gym_iot_signup_url(update: Update, context: CallbackContext):
+	update.message.reply_text("Website Registration Link =>\
+	[Gym_IoT Sign-up](http://127.0.0.1:5000/sign-up)", parse_mode='Markdown')
 
 def unknown(update: Update, context: CallbackContext):
 	update.message.reply_text(
@@ -66,6 +72,7 @@ def unknown_text(update: Update, context: CallbackContext):
 
 updater.dispatcher.add_handler(CommandHandler('start', start))
 updater.dispatcher.add_handler(CommandHandler('gym_iot', gym_iot_url))
+updater.dispatcher.add_handler(CommandHandler('gym_iot_registration', gym_iot_signup_url))
 updater.dispatcher.add_handler(CommandHandler('help', help))
 updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown))
 updater.dispatcher.add_handler(MessageHandler(

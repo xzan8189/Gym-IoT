@@ -41,3 +41,27 @@ dynamobdb.create_table( # Creating table 'Training_cards'
         'WriteCapacityUnits': 10
     }
 )
+
+dynamobdb.create_table( # Creating table 'Gym_rooms'
+    TableName='Gym_rooms',
+    KeySchema=[
+        {
+            'AttributeName': 'id',
+            'KeyType': 'HASH' #Partition key
+        }
+    ],
+    AttributeDefinitions=[
+        {
+            'AttributeName': 'id',
+            'AttributeType': 'N'
+        }
+    ],
+    ProvisionedThroughput={
+        'ReadCapacityUnits': 10,
+        'WriteCapacityUnits': 10
+    },
+    StreamSpecification={
+        'StreamEnabled': True,
+        'StreamViewType': 'NEW_IMAGE'
+    }
+)

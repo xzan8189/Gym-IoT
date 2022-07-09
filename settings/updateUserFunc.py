@@ -51,6 +51,9 @@ def updateUser(user, msg_body, machine):
     now = datetime.datetime.now()
     user['gym']['calories'][str(now.year)][now.month-1] = str(int(user['gym']['calories'][str(now.year)][now.month-1]) + value_calories_spent)
 
+    # update 'gym_room'
+    user['gym_room'] = int(msg_body['gym_room'])
+
     return user
 
 def lambda_handler(event, context):

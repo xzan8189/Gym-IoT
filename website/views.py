@@ -84,7 +84,7 @@ def insert_repetitions():
 
         training_card_found_dict['content']['calories_or_repetitions'][index_exercise] = current_repetitions
         table_training_cards.put_item(Item=training_card_found_dict) # Updating training_card
-        print(f"Updated {name_exercise}, you did about {num_repetitions} Rep")
+        flash(f'Updated {name_exercise} exercise, you did about {num_repetitions} Reps!', category='success')
 
     return redirect(url_for('views.training_card'))
 

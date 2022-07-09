@@ -142,9 +142,35 @@
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
-                <!-- Success -->
+                <!-- Alert Success -->
                 <div class="alert alert-success alter-dismissable fade" id="alert-success">
                 </div>
+
+                <!-- Alert notification from server -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                {% if category == 'error' %}
+                <!-- Error -->
+                <div class="alert alert-danger alter-dismissable fade show">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% else %}
+                <!-- Success -->
+                <div class="alert alert-success alter-dismissable fade show">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">

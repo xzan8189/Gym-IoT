@@ -141,7 +141,7 @@ aws lambda delete-function --function-name updateUserFunc --endpoint-url=http://
 
 	* simulate the messages sent by some IoT devices
 	```bash
-	python3 IotDevices.py
+	python3 machine_sensors.py
 	```
 
 	* manually invoke the function (it may take some times)

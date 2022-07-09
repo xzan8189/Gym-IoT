@@ -32,8 +32,6 @@ def machines_and_exercises_left(training_card_updated, machine_or_exercise_done,
     if flag == 1 and user['telegram_chat_id'] != "": # Sending message
         print(f"Message: {msg_machines_and_exercises_left}\nSending message...\n")
         requests.get('https://api.telegram.org/bot' + CONFIG.BOT_TOKEN + '/sendMessage?chat_id=' + user['telegram_chat_id'] + '&parse_mode=Markdown&text=' + msg_machines_and_exercises_left)
-    else:
-        print(f"The customer doesn't have Telegram\n")
 
 def updateTrainingCardUser(training_card, msg_body):
     username = msg_body['username']
