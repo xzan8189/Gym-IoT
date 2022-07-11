@@ -11,4 +11,4 @@ class DefaultConfig:
 
     #Telegram bot
     BOT_TOKEN = os.environ.get("Bot_token", "")
-    BOT_TOKEN_PAYMENT_PROVIDER = os.environ.get("")
+    BOT_TOKEN_PAYMENT_PROVIDER = os.environ.get("Bot_token_payment_provider", "")
