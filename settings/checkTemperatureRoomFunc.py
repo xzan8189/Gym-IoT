@@ -26,7 +26,7 @@ def lambda_handler(event, context):
                     FilterExpression=Attr("gym_room").eq(int(id))
                 )
 
-                # Send request to the IoT device that enables the air conditioner
+                # Send request to the IoT device that enables the air conditioner in the specified room
                 print("requests.get('https://air_conditioner?id=" + str(id) + "&temperature_to_reach=" + str(temperature_to_reach) + "')")
 
                 # Sending message to customers that are training in that room
