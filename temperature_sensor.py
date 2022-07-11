@@ -8,8 +8,8 @@ table = dynamodb.Table('Gym_rooms')
 
 if __name__ == '__main__':
     # Creating Queues
-    id_random_gym_room = random.randint(1, 3)
-    random_temperature = random.randint(25, 33)
+    id_random_gym_room = 1
+    random_temperature = 30
     air_conditioner = False
 
     if random_temperature >= 30:

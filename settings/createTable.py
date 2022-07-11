@@ -62,6 +62,6 @@ dynamobdb.create_table( # Creating table 'Gym_rooms'
     },
     StreamSpecification={
         'StreamEnabled': True,
-        'StreamViewType': 'NEW_IMAGE'
+        'StreamViewType': 'NEW_AND_OLD_IMAGES'
     }
 )
