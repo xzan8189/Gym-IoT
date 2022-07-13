@@ -44,7 +44,6 @@ def login():
             print(e.response['Error']['Message'])
 
 
-    print("ciao")
     data = request.form
     print(data)
     return render_template("login.html")

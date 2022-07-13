@@ -2,6 +2,9 @@ import boto3
 import requests
 from boto3.dynamodb.conditions import Attr
 
+from settings.config import DefaultConfig
+
+CONFIG = DefaultConfig()
 
 def lambda_handler(event, context):
     for record in event['Records']:
@@ -32,7 +35,7 @@ def lambda_handler(event, context):
                 # Sending message to customers that are training in that room
                 for item in response['Items']:
                     if item['telegram_chat_id'] != "": # I send the message only to customers that have Telegram connected (because i send the message on Telegram)
-                        requests.get('https://api.telegram.org/bot' + "5364582485:AAH-7yk83uU3BRAvWGuZWtujcYhwsVHeziw" + '/sendMessage?chat_id=' + item['telegram_chat_id'] +
+                        requests.get('https://api.telegram.org/bot' + CONFIG.BOT_TOKEN + '/sendMessage?chat_id=' + item['telegram_chat_id'] +
                                      '&parse_mode=Markdown&text=' +
                                      f"🌡Hi {item['username']}, it was detected in *{name_room}* a temperature of *{str(temperature)}°*, it is quite high!\n\n"
                                      f"❄️It will be activated the air conditioner to lower the temperature, till to arrive *{str(temperature_to_reach)}°*\n\n"

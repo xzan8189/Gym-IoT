@@ -1,0 +1,36 @@
+{
+  "Comment": "Transaction Processor State Machine",
+  "StartAt": "ProcessChoice",
+  "States": {
+    "ProcessChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.Tip",
+          "BooleanEquals": true,
+          "Next": "SendEmailCustomerAndOwner"
+        },
+        {
+          "Variable": "$.Tip",
+          "BooleanEquals": false,
+          "Next": "SendInvoiceEmailCustomer"
+        }
+      ]
+    },
+    "SendInvoiceEmailCustomer": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-2:000000000000:function:sendEmailCustomerFunc",
+      "End": true
+    },
+    "SendEmailCustomerAndOwner": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-2:000000000000:function:sendEmailCustomerFunc",
+      "Next": "SendEmailOwner"
+    },
+    "SendEmailOwner": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-2:000000000000:function:sendEmailOwnerFunc",
+      "End": true
+    }
+  }
+}
