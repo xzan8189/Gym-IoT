@@ -58,7 +58,7 @@ def updateTrainingCardUser(training_card, msg_body):
         else:
             training_card['content']['calories_or_repetitions'][index_machine] = int(training_card['content']['calories_or_repetitions'][index_machine]) - value_calories_spent
 
-    print(str(training_card))
+    print(str(training_card) + "\n")
     return training_card
 
 def lambda_handler(event, context):

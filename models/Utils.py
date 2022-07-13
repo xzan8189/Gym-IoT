@@ -64,6 +64,9 @@ class Utils:
             'last_time_user_was_updated': obj_user.getLast_time_user_was_updated(),
             "telegram_chat_id": "",
             'gym_room': "",
+            "payment": {
+                "last_time_paid": "",
+            },
             'info': {
                 "sex": obj_user.getSex(),
                 "age": obj_user.getAge(),

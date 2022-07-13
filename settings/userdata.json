@@ -9,6 +9,9 @@
       "last_time_user_was_updated": "2022-05-16",
       "telegram_chat_id": "",
       "gym_room": 1,
+      "payment": {
+        "last_time_paid": "2022-05-16"
+      },
       "info": {
         "sex": "M",
         "age": "23",
@@ -41,6 +44,9 @@
       "last_time_user_was_updated": "2022-05-16",
       "telegram_chat_id": "",
       "gym_room": 2,
+      "payment": {
+        "last_time_paid": "2022-05-16"
+      },
       "info": {
         "sex": "M",
         "age": "21",
