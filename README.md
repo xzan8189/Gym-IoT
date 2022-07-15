@@ -327,4 +327,3 @@ export FLASK_APP=./main.py; flask run
 
 * **Weight charts**: In this way we can track the change of our weight
 * **Workout videos**: Even if the client is away for work, he can still train with our instructors. 
-* **Training Card**: Recommending a training schedule based on the customer’s performance, which contains all the machines and exercises to execute.
