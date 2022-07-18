@@ -2,7 +2,7 @@
 
 ## Overview
 
-GymIoT is a smart gym that keep track about your training, providing different functionalities in order to improve your workout.
+GymIoT is a smart gym that keeps track about your training, providing different functionalities in order to improve your workout.
 
 It allows to achieve informations such as **calories consumed** and **time spent** on each machine.
 Storing these kind of informations, over the weeks/months, we are able to generate a chart describing the progress of the trainings over the year. There is also the possibility to compare the progress of the current year with the previous one, in order to have an exhaustive understanding of your improvement.
