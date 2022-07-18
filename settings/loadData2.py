@@ -26,7 +26,6 @@ if __name__ == '__main__':
     except ClientError as e:
         print(e.response['Error']['Message'])
 
-
     print(str(response['Item']))
     for item in response['Item']['content']['calories_or_repetitions']:
         if type(item) is Decimal:

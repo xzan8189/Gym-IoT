@@ -2,21 +2,21 @@
 
 ## Overview
 
-GymIoT is a smart gym that keep track about your training, providing constantly reports about the progress of your workout, done during the day and over the months.
+GymIoT is a smart gym that keep track about your training, providing different functionalities in order to improve your workout.
 
 It allows to achieve informations such as **calories consumed** and **time spent** on each machine.
-Storing these kind of informations, over the weeks/months, we are able to generate a chart describing the progress of your trainings over the year. There is also the possibility to compare the progress of the current year with the previous one, in order to have an exhaustive understanding of your improvement.
+Storing these kind of informations, over the weeks/months, we are able to generate a chart describing the progress of the trainings over the year. There is also the possibility to compare the progress of the current year with the previous one, in order to have an exhaustive understanding of your improvement.
 
 In trainings it's not just important to figure out how many *calories* you should consume because in order to reach a good result you need to also understand what kind of **machine** you should use and what kind of **exercise** you should do and in what **sequence** you have to execute them!
 
-So, based on these claims, we introduced a **Training Card**. \
+So, based on these claims, it is introduced a **Training Card**. \
 It looks like this:
 <div align="center">
 <img src="./images/Training_card.jpg" alt="loading..." width="80%" >
 </div>
 
 It shows for each *machine* the calories that you have to consume yet and for each *exercise* the repetitions that you need to do yet.\
-When the customer doesn't follow correctly the training card, it will be send a message through the bot Telegram notifying him the machines and the exercises that he left undone.
+When the customer doesn't follow correctly the training card, it will be send a message through the bot Telegram notifying him the machines and the exercises that he left undone, with their respective calories and reps remaining.
 
 Today's **temperatures** are very high (for many reasons) and for this reason it could be a good solution to have an air conditioner in each gym room.
 In this way we can adjust the temperature in the room in order to train with the best possibilities.\
@@ -62,7 +62,8 @@ There are two kind of IoT sensors:
   * Enabled [DynamoDB Streams](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.html) to capture modifications in a DynamoDB table.
 * **AWS CloudWatch:** Implements the rule, through EventBridge, which invokes the serverless functions ([Amazon EventBridge](https://aws.amazon.com/eventbridge/))
 * **AWS SES:** Used to send emails. ([AWS SES](https://aws.amazon.com/it/ses/))
-* **Flask:** Web server which allows the use of python as backend programming language. ([Flask](https://flask.palletsprojects.com/en/2.1.x/))
+* **Flask:** Web server which allows the use of Python as backend programming language. ([Flask](https://flask.palletsprojects.com/en/2.1.x/))
+* **Telegram Bot API**: Thanks to this HTTP-based interface it was possible to create a bot for Telegram. ([Telegram API](https://core.telegram.org/bots/api#update))
 
 ## Installation and usage
 
@@ -307,16 +308,15 @@ python3 telegram_bot_main.py
 ```
 
 ### Use it
-1. Simulate the IoT machine devices
+1. Simulate the IoT devices
 ```bash
-python3 IoTdevices.py
+python3 machine_sensor.py
+python3 temperature_sensor.py
 ```
 
-2. Wait that the Lambda function *updateUserFunc* compute the data (wait 1 minute) or invoke it manually
+2. Modify the variable `SECRET_KEY` within the `config.py` with a random string.
 
-3. Modify the variable `SECRET_KEY` within the `config.py` with a random string.
-
-4. Run flask with the command:
+3. Run flask with the command:
 ```bash
 export FLASK_APP=./main.py; flask run
 ```
