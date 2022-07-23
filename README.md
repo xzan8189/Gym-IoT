@@ -187,7 +187,7 @@ check within the table of dynamodb-admin that the item with *username="xzan8189"
 
 1. Creare the rule and save the Arn (it should be something like `arn:aws:events:us-east-2:000000000000:rule/<name_function>`)
 ```bash
-aws events put-rule --name every_minute --schedule-expression 'rate(1 minutes)' --endpoint-url=http://localhost:4566
+aws events put-rule --name every_minute --schedule-expression "rate(1 minutes)" --endpoint-url=http://localhost:4566
 ```
 
 2. Check that the rule has been correctly created with the frequency wanted
@@ -197,9 +197,9 @@ aws events list-rules --endpoint-url=http://localhost:4566
 
 3. Add permissions to the rule created
 ```bash
-aws lambda add-permission --function-name updateUserFunc --statement-id every_minute --action 'lambda:InvokeFunction' --principal events.amazonaws.com --source-arn arn:aws:events:us-east-2:000000000000:rule/updateUserFunc --endpoint-url=http://localhost:4566
+aws lambda add-permission --function-name updateUserFunc --statement-id every_minute --action "lambda:InvokeFunction" --principal events.amazonaws.com --source-arn arn:aws:events:us-east-2:000000000000:rule/updateUserFunc --endpoint-url=http://localhost:4566
 
-aws lambda add-permission --function-name updateTrainingCardFunc --statement-id every_minute --action 'lambda:InvokeFunction' --principal events.amazonaws.com --source-arn arn:aws:events:us-east-2:000000000000:rule/updateTrainingCardFunc --endpoint-url=http://localhost:4566
+aws lambda add-permission --function-name updateTrainingCardFunc --statement-id every_minute --action "lambda:InvokeFunction" --principal events.amazonaws.com --source-arn arn:aws:events:us-east-2:000000000000:rule/updateTrainingCardFunc --endpoint-url=http://localhost:4566
 ```
 
 4. Add the lambda function to the rule using the JSON file containing the Lambda function Arn
