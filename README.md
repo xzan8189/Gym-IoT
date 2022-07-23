@@ -204,7 +204,9 @@ aws lambda add-permission --function-name updateTrainingCardFunc --statement-id 
 
 4. Add the lambda function to the rule using the JSON file containing the Lambda function Arn
 ```bash
-aws events put-targets --rule every_minute --targets file://settings/targets.json --endpoint-url=http://localhost:4566
+aws events put-targets --rule every_minute --targets file://settings/updateUserFunc_targets.json --endpoint-url=http://localhost:4566
+
+aws events put-targets --rule every_minute --targets file://settings/updateTrainingCardFunc_targets.json --endpoint-url=http://localhost:4566
 ```
 
 Now every minute the functions *updateUserFunc* and *updateTrainingCardFunc* will be triggered.
@@ -292,7 +294,7 @@ aws lambda delete-function --function-name sendEmailOwnerFunc --endpoint-url=htt
     ```
    3. Create state machine and save the "*stateMachineArn*"
    ```bash
-    aws stepfunctions create-state-machine --name "ProcessTransactionStateMachine" --definition file://settings/step_functions/asl_definition.json --role-arn "arn:aws:iam::000000000000:role/step_functions_role" --endpoint-url=http://localhost:4566
+    aws stepfunctions create-state-machine --name "StateMachine" --definition file://settings/step_functions/asl_definition.json --role-arn "arn:aws:iam::000000000000:role/step_functions_role" --endpoint-url=http://localhost:4566
     ```
    4. Modify the variable `STATE_MACHINE_ARN` within the `config.py` with the "*stateMachineArn*" saved previously.
 
@@ -306,6 +308,7 @@ aws lambda delete-function --function-name sendEmailOwnerFunc --endpoint-url=htt
 ```bash
 python3 telegram_bot_main.py
 ```
+6. Run the command `/start` in the chat with the bot in order to enable the notifications about your training.
 
 ### Use it
 1. Simulate the IoT devices
