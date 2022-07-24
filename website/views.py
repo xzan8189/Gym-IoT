@@ -88,44 +88,58 @@ def insert_repetitions():
 
     return redirect(url_for('views.training_card'))
 
-flag = False
-data_json = "nothing"
+
 @views.route("/listen", methods=['GET', 'POST'])
 def listen():
-    global flag, data_json
-    if request.method == 'POST': # Receive data
+    flag = False
+    username = session['user_in_session']['username']
+    user_found_dict = table_users.get_item(Key={'username': username})['Item']
+
+    if user_found_dict['modified'] == True: # User modified, we need to refresh the data in the page
         flag = True
-        data_json = flask.request.json
 
     def respond_to_client(): # Sending data to event
-        user_found_dict = table_users.get_item(Key={'username': data_json['username']})
-        yield f"data: {user_found_dict['Item']}\nevent: {data_json['username']}\n\n"
+        yield f"data: {user_found_dict}\nevent: {username}\n\n"
 
     if request.method == 'GET' and flag: # Send data
         flag=False
+        user_found_dict['modified'] = False
+        table_users.put_item(Item=user_found_dict)
         return Response(respond_to_client(), mimetype='text/event-stream')
 
     return Response(mimetype='text/event-stream') # There is nothing. I have to return something otherwise it will give an error the eventListener in Javascript
 
-flag2 = False
-data_json2 = "nothing"
 @views.route("/listenTrainingCard", methods=['GET', 'POST'])
 def listenTrainingCard():
-    global flag2, data_json2
-    if request.method == 'POST': # Receive data
-        flag2 = True
-        data_json2 = flask.request.json
+    flag = False
+    username = session['user_in_session']['username']
+    trainingCard_found_dict = table_training_cards.get_item(Key={'id': username})['Item']
+
+    if trainingCard_found_dict['machine_just_done']['name_machine'] != "": # Trainining card modified, we need to refresh the data in the page
+        flag = True
 
     def respond_to_client(): # Sending data to event
-        #trainingCard_found_dict = table_training_cards.get_item(Key={'id': data_json2['username']})
-        user_found_dict = table_users.get_item(Key={'username': data_json2['username']})
-        user_found_dict = user_found_dict['Item']
-        index_machine = list(user_found_dict['gym']['machines']['name_machine']).index(data_json2['machine_or_exercise'])
-        total_calories_spent_on_machine = user_found_dict['gym']['machines']['calories_spent'][index_machine]
-        yield f"data: {data_json2}\ntotal_calories_spent_on_machine: {total_calories_spent_on_machine}\nevent: {data_json2['username']}TrainingCard\n\n"
+        trainingCard_found_dict = table_training_cards.get_item(Key={'id': username})['Item']
+        name_machine = trainingCard_found_dict['machine_just_done']['name_machine']
+        calories_consumed = trainingCard_found_dict['machine_just_done']['calories_consumed']
 
-    if request.method == 'GET' and flag2: # Send data
-        flag2=False
+        index_machine = list(trainingCard_found_dict['content']['schedule']).index(name_machine)
+        calories_left = trainingCard_found_dict['content']['calories_or_repetitions'][index_machine]
+        data = {
+            "name_machine": name_machine,
+            "calories_consumed": calories_consumed,
+            "calories_left": calories_left
+        }
+
+        print(f"username: {username}, name_machine: {name_machine}, calories_consumed: {calories_consumed}")
+
+        trainingCard_found_dict['machine_just_done']['name_machine'] = ""
+        table_training_cards.put_item(Item=trainingCard_found_dict)
+
+        yield f"data: {data}\nevent: {username}TrainingCard\n\n"
+
+    if request.method == 'GET' and flag: # Send data
+        flag=False
         return Response(respond_to_client(), mimetype='text/event-stream')
 
     return Response(mimetype='text/event-stream') # There is nothing. I have to return something otherwise it will give an error the eventListener in Javascript

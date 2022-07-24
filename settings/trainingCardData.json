@@ -14,7 +14,11 @@
       "content": {
           "schedule": ["Cyclette", "Tapis_roulant", "Pectoral_machine", "Lat_machine", "Elliptical_bike", "Spin_bike", "Shoulder_press"],
           "calories_or_repetitions": ["180", "220", 30, 23, "140", "100", 30]
-        }
+        },
+      "machine_just_done": {
+          "name_machine": "",
+          "calories_consumed": 0
+      }
     },
     {
       "id": "2",

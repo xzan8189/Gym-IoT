@@ -230,7 +230,7 @@ aws lambda create-event-source-mapping --function-name emailError --batch-size 5
 
 3) Test the mapping sending a message on the error queue and check that an email is sent
 ```sh
-aws sqs send-message --queue-url http://localhost:4566/000000000000/Errors --message-body '{"device_id": "Cyclette","value_time_spent": "ERROR","value_calories_spent": "ERROR"}' --endpoint-url=http://localhost:4566
+aws sqs send-message --queue-url http://localhost:4566/000000000000/Errors --message-body "{"device_id": "Cyclette","value_time_spent": "ERROR","value_calories_spent": "ERROR"}" --endpoint-url=http://localhost:4566
 ```
 
 **7. Set up the Lambda function triggered every time there is a modification to "*Gym_rooms*" table into DynamoDB**

@@ -35,28 +35,23 @@ def machines_and_exercises_left(training_card_updated, machine_or_exercise_done,
 
 def updateTrainingCardUser(training_card, msg_body):
     username = msg_body['username']
-    machine_or_exercise = msg_body['machine_or_exercise']
+    machine = msg_body['machine_or_exercise']
     value_calories_spent = int(msg_body['value_calories_spent'])
 
-    if machine_or_exercise not in training_card['content']['schedule']: # The machine is not inside the training card. EXIT.
-        print(f"The {machine_or_exercise} is not inside training card of user\n")
+    if machine not in training_card['content']['schedule']: # The machine is not inside the training card. EXIT.
+        print(f"The {machine} is not inside training card of user\n")
         return False
 
-    index_machine = list(training_card['content']['schedule']).index(machine_or_exercise)
-
+    index_machine = list(training_card['content']['schedule']).index(machine)
     value = int(training_card['content']['calories_or_repetitions'][index_machine]) - value_calories_spent
     print(str(training_card['content']['calories_or_repetitions'][index_machine]) + " - " + str(value_calories_spent) + " = " + str(value))
-    if type(training_card['content']['calories_or_repetitions'][index_machine]) is str: # Check if it is a string. CALORIES.
-        if (value < 0):
-            training_card['content']['calories_or_repetitions'][index_machine] = "0"
-        else:
-            training_card['content']['calories_or_repetitions'][index_machine] = str(int(training_card['content']['calories_or_repetitions'][index_machine]) - value_calories_spent)
+    if (value < 0):
+        training_card['content']['calories_or_repetitions'][index_machine] = "0"
+    else:
+        training_card['content']['calories_or_repetitions'][index_machine] = str(int(training_card['content']['calories_or_repetitions'][index_machine]) - value_calories_spent)
 
-    else: # It is not a string, so it's an int. REPETITIONS.
-        if (value < 0):
-            training_card['content']['calories_or_repetitions'][index_machine] = 0
-        else:
-            training_card['content']['calories_or_repetitions'][index_machine] = int(training_card['content']['calories_or_repetitions'][index_machine]) - value_calories_spent
+    training_card['machine_just_done']['name_machine'] = machine
+    training_card['machine_just_done']['calories_consumed'] = value_calories_spent
 
     print(str(training_card) + "\n")
     return training_card
@@ -88,18 +83,6 @@ def lambda_handler(event, context):
                     break
 
                 table_training_cards.put_item(Item=training_card_updated)
-
-                index_machine = list(training_card_updated['content']['schedule']).index(msg_body['machine_or_exercise'])
-                calories_updated = training_card_updated['content']['calories_or_repetitions'][index_machine]
-                if type(calories_updated) is str:
-                    calories_updated = str(calories_updated)
-                requests.post('http://127.0.0.1:5000/listenTrainingCard', # Updating website
-                              json={
-                                  'username': msg_body['username'],
-                                  'machine_or_exercise': msg_body['machine_or_exercise'],
-                                  'calories_updated': calories_updated,
-                                  'value_calories_spent': msg_body['value_calories_spent']
-                              })
                 user = table_users.get_item(Key={'username': msg_body['username']})
                 machines_and_exercises_left(training_card_updated, msg_body['machine_or_exercise'], user['Item']) # Notify via Telegram if the customer is not performing the correct execution of the training card
 

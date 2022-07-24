@@ -12,6 +12,7 @@
       "payment": {
         "last_time_paid": "2022-05-16"
       },
+      "modified": false,
       "info": {
         "sex": "M",
         "age": "23",
@@ -47,6 +48,7 @@
       "payment": {
         "last_time_paid": "2022-05-16"
       },
+      "modified": false,
       "info": {
         "sex": "M",
         "age": "21",

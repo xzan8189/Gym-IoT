@@ -1,5 +1,5 @@
 {
-  "Comment": "Transaction Processor State Machine",
+  "Comment": "State Machine",
   "StartAt": "ProcessChoice",
   "States": {
     "ProcessChoice": {

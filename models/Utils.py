@@ -67,6 +67,7 @@ class Utils:
             "payment": {
                 "last_time_paid": "",
             },
+            "modified": False,
             'info': {
                 "sex": obj_user.getSex(),
                 "age": obj_user.getAge(),
@@ -100,7 +101,11 @@ class Utils:
             "content": {
                 "schedule": ["Cyclette", "Pectoral_machine", "Elliptical_bike", "Spin_bike", "Chest_Press"],
                 "calories_or_repetitions": ["140", 30, "180", "100", 30]
-            }
+            },
+            "machine_just_done": {
+                "name_machine": "",
+                "calories_consumed": 0
+            },
         }
 
         return training_card
